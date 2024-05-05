@@ -16,8 +16,46 @@
       {
         "command": "stencil-ui.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "stencil-ui.createFolder",
+        "title": "Create UI Directory",
+        "category": "Files and Folder"
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "stencil-ui.createFolder",
+          "group": "navigation@8"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Stencil",
+      "properties": {
+        "stencil.useTypescript": {
+          "type": "boolean",
+          "default": true,
+          "description": "Specify whether TypeScript should be used for UI component."
+        },
+        "stencil.styleFormat": {
+          "type": "string",
+          "default": "css",
+          "enum": [
+            "css",
+            "scss",
+            "less"
+          ],
+          "description": "Specify the style format for UI component."
+        },
+        "stencil.useCssModules": {
+          "type": "boolean",
+          "default": true,
+          "description": "Specify whether to use CSS Modules for importing styles for UI component."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
