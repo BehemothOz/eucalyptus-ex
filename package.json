@@ -19,7 +19,7 @@
       },
       {
         "command": "stencil-ui.createFolder",
-        "title": "Create UI Directory",
+        "title": "New UI Directory...",
         "category": "Files and Folder"
       }
     ],
