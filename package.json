@@ -27,6 +27,7 @@
       "explorer/context": [
         {
           "command": "stencil-ui.createFolder",
+          "when": "explorerResourceIsFolder",
           "group": "navigation@8"
         }
       ]
