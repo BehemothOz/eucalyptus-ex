@@ -1,12 +1,10 @@
-export type TemplateId = 10 | 20;
+export type TemplateKey = 'template_a' | 'template_b' | 'template_c';
 
 export interface TemplateDescription {
-    id: TemplateId;
+    key: TemplateKey;
     label: string;
     detail: string;
 }
-
-export type Template = Array<FILES>;
 
 export enum FILES {
     COMPONENT_FILE = 'component',
@@ -14,34 +12,46 @@ export enum FILES {
     INDEX_FILE = 'index',
 }
 
-export type TemplateKeys = Array<keyof Template>;
-
-export const templates: Record<TemplateId, Array<FILES>> = {
-    10: [FILES.COMPONENT_FILE, FILES.STYLE_FILE, FILES.INDEX_FILE],
-    20: [FILES.COMPONENT_FILE, FILES.INDEX_FILE],
-};
+export type Template = Array<FILES>;
 
 export interface ITemplates {
-    getTemplateById: (templateId: TemplateId) => Template;
-    getTemplatesDescription: () => Array<TemplateDescription>;
+    getTemplateByKey: (key: TemplateKey) => Template;
+    getTemplatesDescriptions: () => Array<TemplateDescription>;
 }
+
+export const templates: Record<TemplateKey, Template> = {
+    template_a: [FILES.COMPONENT_FILE, FILES.STYLE_FILE, FILES.INDEX_FILE],
+    template_b: [FILES.COMPONENT_FILE, FILES.INDEX_FILE],
+    template_c: [FILES.COMPONENT_FILE, FILES.STYLE_FILE],
+};
+
+export const templatesDescriptions: Array<TemplateDescription> = [
+    {
+        key: 'template_a',
+        label: 'Template A',
+        detail: 'Contains the following files: component, style and index',
+    },
+    {
+        key: 'template_b',
+        label: 'Template B',
+        detail: 'Contains the following files: component and index',
+    },
+    {
+        key: 'template_c',
+        label: 'Template C',
+        detail: 'Contains the following files: component and style',
+    },
+];
 
 export class Templates implements ITemplates {
     private templates = templates;
-    private templatesDescription: Array<TemplateDescription> = [
-        { id: 10, label: 'Full directory', detail: 'Contains the following files: component and index' },
-        { id: 20, label: 'Partial directory', detail: 'Contains the following files: component, style and index' },
-    ];
+    private templatesDescriptions = templatesDescriptions;
 
-    getTemplateById(templateId: TemplateId) {
-        return this.templates[templateId];
+    getTemplateByKey(key: TemplateKey) {
+        return this.templates[key];
     }
 
-    getTemplatesDescription() {
-        return this.templatesDescription;
-    }
-
-    getTemplateKeys(template: Template) {
-        return Object.keys(template) as TemplateKeys;
+    getTemplatesDescriptions() {
+        return this.templatesDescriptions;
     }
 }
