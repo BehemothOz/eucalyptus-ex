@@ -10,13 +10,13 @@ export enum ExportType {
     NAMED = 'named',
 }
 
-export type ExportPayload = {
+type ExportPayload = {
     type: ExportType.NAMED;
     from: string;
     entry: string;
 };
 
-export type ImportPayload = {
+type ImportPayload = {
     from: string;
 } & (
     | {
@@ -30,15 +30,26 @@ export type ImportPayload = {
 );
 
 export class ModuleTransferBuilder {
-    imports: Array<string> = [];
     exports: Array<string> = [];
+    imports: Array<string> = [];
+
+    addExport(payload: ExportPayload) {
+        this.exports.push(this._handleExportPayload(payload));
+    }
 
     addImport(payload: ImportPayload) {
         this.imports.push(this._handleImportPayload(payload));
     }
 
-    addExport(payload: ExportPayload) {
-        this.exports.push(this._handleExportPayload(payload));
+    private _handleExportPayload(payload: ExportPayload) {
+        const { type, from, entry } = payload;
+
+        switch (type) {
+            case ExportType.NAMED:
+                return reExportTag`{ ${entry} }${from}`;
+            default:
+                return '';
+        }
     }
 
     private _handleImportPayload(payload: ImportPayload) {
@@ -51,17 +62,6 @@ export class ModuleTransferBuilder {
                 return importTag`{ ${entry} }${from}`;
             case ImportType.GLOBAL:
                 return importGlobalTag`${from}`;
-            default:
-                return '';
-        }
-    }
-
-    private _handleExportPayload(payload: ExportPayload) {
-        const { type, from, entry } = payload;
-
-        switch (type) {
-            case ExportType.NAMED:
-                return reExportTag`{ ${entry} }${from}`;
             default:
                 return '';
         }

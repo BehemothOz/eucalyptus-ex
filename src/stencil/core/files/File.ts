@@ -1,14 +1,15 @@
-export interface FileSignature<Extension = string> {
-    name: string;
-    extension: Extension;
+import { ModuleTransferBuilder } from '../builder';
 
+export interface FileSignature {
     getName: () => string;
     getNameWithExtension: () => string;
     getContent: () => string;
 }
 
-export abstract class File<Extension> implements FileSignature<Extension> {
-    constructor(public name: string, public extension: Extension) {}
+export abstract class File<Extension> extends ModuleTransferBuilder implements FileSignature {
+    constructor(private name: string, private extension: Extension) {
+        super();
+    }
 
     getName() {
         return this.name;
