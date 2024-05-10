@@ -1,6 +1,12 @@
 import * as vscode from 'vscode';
 
-export class FileManager {
+export interface IFileManager {
+    joinPath: (root: vscode.Uri, fileName: string) => vscode.Uri;
+    createDirectory: (directoryUri: vscode.Uri) => Promise<void>;
+    createFile: (fileUri: vscode.Uri, content: string) => Promise<void>;
+}
+
+export class FileManager implements IFileManager {
     joinPath(root: vscode.Uri, fileName: string): vscode.Uri {
         return vscode.Uri.joinPath(root, fileName);
     }

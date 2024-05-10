@@ -8,9 +8,9 @@ export interface IFileBuilder {
 }
 
 export interface IFileDirector {
-    buildByCoreTemplate: (names: FileNames) => void;
-    buildByMajorTemplate: (names: Omit<FileNames, 'styleName'>) => void;
-    buildByMinorTemplate: (names: Omit<FileNames, 'indexName'>) => void;
+    buildByATemplate: (names: FileNames) => void;
+    buildByBTemplate: (names: Omit<FileNames, 'styleName'>) => void;
+    buildByCTemplate: (names: Omit<FileNames, 'indexName'>) => void;
 }
 
 export interface FileNames {

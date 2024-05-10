@@ -1,4 +1,4 @@
-import { ModuleTransferBuilder } from '../builder';
+import { ModuleTransferBuilder } from '../builders';
 
 export interface FileSignature {
     getName: () => string;

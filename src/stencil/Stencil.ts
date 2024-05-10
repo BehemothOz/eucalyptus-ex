@@ -1,26 +1,27 @@
 import * as vscode from 'vscode';
 
-import { FileManager } from './core/FileManager';
-import { FileBuilder, type IFileBuilder } from './core/builder/FileBuilder';
-import { FileDirector } from './core/FileDirector';
-
-import { Templates, FILES, type ITemplates, type TemplateId } from './core/Templates';
+import { FileManager, type IFileManager } from './core/FileManager';
+import { FileBuilder, FileDirector, type IFileBuilder, type IFileDirector } from './core/builders';
+import { Templates, FILES, type ITemplates } from './core/Templates';
 
 export class Stencil {
     private file: vscode.Uri;
 
     private templates: ITemplates;
+
     private fileBuilder: IFileBuilder;
-    private fileManager: FileManager;
+    private fileDirector: IFileDirector;
+
+    private fileManager: IFileManager;
 
     constructor(file: vscode.Uri) {
         this.file = file;
 
-        // FileDirector
-
         this.templates = new Templates();
-        this.fileBuilder = new FileBuilder();
         this.fileManager = new FileManager();
+
+        this.fileBuilder = new FileBuilder();
+        this.fileDirector = new FileDirector(this.fileBuilder);
     }
 
     /*
