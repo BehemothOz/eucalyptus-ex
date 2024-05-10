@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
 
-import { FileManager } from './FileManager';
-import { FileBuilder, type IFileBuilder } from './files/FileBuilder';
+import { FileManager } from './core/FileManager';
+import { FileBuilder, type IFileBuilder } from './core/builder/FileBuilder';
+import { FileDirector } from './core/FileDirector';
 
-import { Templates, FILES, type ITemplates, type TemplateId } from './Templates';
+import { Templates, FILES, type ITemplates, type TemplateId } from './core/Templates';
 
 export class Stencil {
     private file: vscode.Uri;
@@ -14,6 +15,8 @@ export class Stencil {
 
     constructor(file: vscode.Uri) {
         this.file = file;
+
+        // FileDirector
 
         this.templates = new Templates();
         this.fileBuilder = new FileBuilder();
@@ -91,22 +94,6 @@ export class Stencil {
     }
 
     private buildFilesByTemplateId(name: string, templateId: TemplateId) {
-        const templateFiles = this.templates.getTemplateById(templateId);
-
-        for (const file of templateFiles) {
-            switch (file) {
-                case FILES.COMPONENT_FILE:
-                    this.fileBuilder.addComponentFile(name);
-                    break;
-                case FILES.STYLE_FILE:
-                    this.fileBuilder.addStyleFile(name);
-                    break;
-                case FILES.INDEX_FILE:
-                    this.fileBuilder.addIndexFile(name);
-                    break;
-                default:
-                    break;
-            }
-        }
+        // const templateFiles = this.templates.getTemplateById(templateId);
     }
 }
