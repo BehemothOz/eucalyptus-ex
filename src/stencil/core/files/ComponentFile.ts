@@ -18,6 +18,7 @@ export class ComponentFile extends File<ComponentFileExtension> {
     }
 
     getContent(): string {
-        return tag`${this.imports}${this.name}`;
+        // return tag`${this.imports}${this.name}`;
+        return ''
     }
 }

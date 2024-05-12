@@ -14,21 +14,16 @@
   "contributes": {
     "commands": [
       {
-        "command": "stencil-ui.helloWorld",
-        "title": "Hello World"
-      },
-      {
-        "command": "stencil-ui.createFolder",
-        "title": "New UI Directory...",
-        "category": "Files and Folder"
+        "command": "stencil-ui.createUIDirectory",
+        "title": "create UI Directory"
       }
     ],
     "menus": {
       "explorer/context": [
         {
-          "command": "stencil-ui.createFolder",
-          "when": "explorerResourceIsFolder",
-          "group": "navigation@8"
+          "command": "stencil-ui.createUIDirectory",
+          "group": "navigation@8",
+          "when": "explorerResourceIsFolder"
         }
       ]
     },

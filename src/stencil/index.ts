@@ -1,0 +1,1 @@
+export { Stencil } from './Stencil';

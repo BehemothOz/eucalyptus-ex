@@ -27,11 +27,6 @@ export class FileBuilder implements IFileBuilder {
 
     addIndexFile(fileName: string) {
         const file = new IndexFile(fileName);
-
-        if (this._files.has(FILES.STYLE_FILE)) {
-            file.addImport(['styles', this._files.get(FILES.STYLE_FILE)!.getFullName()]);
-        }
-
         this._files.set(FILES.INDEX_FILE, file);
 
         return this;

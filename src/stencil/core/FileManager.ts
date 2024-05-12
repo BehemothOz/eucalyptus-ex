@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 
 export interface IFileManager {
     joinPath: (root: vscode.Uri, fileName: string) => vscode.Uri;
@@ -7,6 +8,11 @@ export interface IFileManager {
 }
 
 export class FileManager implements IFileManager {
+    exist(uri: vscode.Uri) {
+        console.log('exist uri', uri);
+        return fs.existsSync(uri.fsPath);
+    }
+
     joinPath(root: vscode.Uri, fileName: string): vscode.Uri {
         return vscode.Uri.joinPath(root, fileName);
     }
@@ -19,3 +25,5 @@ export class FileManager implements IFileManager {
         return await vscode.workspace.fs.writeFile(fileUri, Buffer.from(content));
     }
 }
+
+export const fm = new FileManager();
