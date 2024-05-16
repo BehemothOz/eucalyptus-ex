@@ -2,38 +2,8 @@ import * as vscode from 'vscode';
 
 import { FileBuilder, FileDirector, type IFileBuilder, type IFileDirector } from './core/builders';
 import { Templates, FILES, type ITemplates } from './core/Templates';
+import { InputField } from './core/InputField';
 import { fm } from './core/FileManager';
-
-class InputField {
-    inputBox: vscode.InputBox;
-    value: string = '';
-
-    // validateInput
-
-    constructor() {
-        this.inputBox = vscode.window.createInputBox();
-
-        this.inputBox.onDidHide(() => this.inputBox.dispose());
-        this.inputBox.onDidAccept(v => {
-            console.log('onDidAccept', v);
-        });
-        this.inputBox.onDidChangeValue(value => {
-            this.value = value;
-        });
-    }
-
-    show() {
-        this.inputBox.show();
-    }
-
-    hide() {
-        this.inputBox.hide();
-    }
-
-    accept() {
-        this.inputBox.validationMessage = '123123123123';
-    }
-}
 
 export class Stencil {
     private file: vscode.Uri;
