@@ -2,8 +2,17 @@ import * as vscode from 'vscode';
 
 import { FileBuilder, FileDirector, type IFileBuilder, type IFileDirector } from './core/builders';
 import { Templates, FILES, type ITemplates } from './core/Templates';
-import { InputField } from './core/InputField';
+import { showInputField, type AcceptValidatingResult } from './core/InputField';
 import { fm } from './core/FileManager';
+
+function hasSpaces(str: string): boolean {
+    return /\s/.test(str);
+}
+
+function isExistDirectory(directoryPath: vscode.Uri): boolean {
+    // fs.lstatSync(directoryPath).isDirectory()
+    return fm.exist(directoryPath);
+}
 
 export class Stencil {
     private file: vscode.Uri;
@@ -26,20 +35,28 @@ export class Stencil {
         https://code.visualstudio.com/api/references/vscode-api#InputBoxOptions
     */
     private async showInput() {
-        const input = new InputField();
-        input.show();
-        // this.input = vscode.window.createInputBox();
-        // return await vscode.window.showInputBox({
-        //     value: '',
-        //     placeHolder: 'New directory',
-        //     prompt: 'Enter the name of the directory',
-        //     valueSelection: [-1, -1],
-        //     validateInput(value) {
-        //         console.log(value);
-        //         return null;
-        //     }
-        // });
-        // onDidAccept: Event<void>
+        const join = (value: string) => fm.joinPath(this.file, value);
+
+        return await showInputField({
+            placeHolder: 'New directory',
+            prompt: 'Enter the name of the directory',
+            valueSelection: [-1, -1],
+            validateAccept(value) {
+                const result: AcceptValidatingResult = { isValid: true, message: undefined };
+
+                if (hasSpaces(value)) {
+                    result.isValid = false;
+                    result.message = 'The name cannot contain spaces';
+                }
+
+                if (isExistDirectory(join(value))) {
+                    result.isValid = false;
+                    result.message = `A folder already ${value} exists at this location`;
+                }
+
+                return result;
+            },
+        });
     }
 
     /*
@@ -54,6 +71,8 @@ export class Stencil {
 
     public async initialization() {
         const valueFromInputBox = await this.showInput();
+
+        console.log('valueFromInputBox', valueFromInputBox);
 
         // if (valueFromInputBox) {
         // } else {
