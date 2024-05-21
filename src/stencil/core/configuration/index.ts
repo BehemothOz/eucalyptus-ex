@@ -1,1 +1,1 @@
-export {} from './Configuration';
+export { Configuration, type StencilSettings } from './Configuration';

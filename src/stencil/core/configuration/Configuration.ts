@@ -3,13 +3,13 @@ import * as vscode from 'vscode';
 export type StyleFileExtension = 'css' | 'scss' | 'less';
 export type JavaScriptFileExtension = 'js' | 'ts';
 
-interface IConfiguration {
+export interface StencilSettings {
     getStyleFileExtension: () => StyleFileExtension;
     getJavaScriptFileExtension: () => JavaScriptFileExtension;
     getCssModulesUsedFlag: () => boolean;
 }
 
-export class Configuration implements IConfiguration {
+export class Configuration implements StencilSettings {
     constructor(private settings: vscode.WorkspaceConfiguration) {}
 
     getCssModulesUsedFlag(): boolean {

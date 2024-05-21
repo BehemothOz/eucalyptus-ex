@@ -1,5 +1,5 @@
 import { ComponentFile, StyleFile, IndexFile } from '../files';
-import { FILES } from '../Templates';
+import { FILES } from '../templates/Templates';
 
 import type { FileSignature } from '../files';
 import type { IFileBuilder } from './types';

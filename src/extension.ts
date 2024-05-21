@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { Stencil } from './stencil';
+import { Configuration } from './stencil/core/configuration';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -30,9 +31,11 @@ export function activate(context: vscode.ExtensionContext) {
 
         vscode.window.showInformationMessage('EXIST FILE');
 
-        const settings = vscode.workspace.getConfiguration('stencil');
+        const vscodeConfiguration = vscode.workspace.getConfiguration('stencil');
 
+        const settings = new Configuration(vscodeConfiguration);
         const stencil = new Stencil(file, settings);
+
         stencil.initialization();
     });
 

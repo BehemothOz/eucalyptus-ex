@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 
 import { FileBuilder, FileDirector, type IFileBuilder, type IFileDirector } from './core/builders';
-import { Templates, FILES, type ITemplates } from './core/Templates';
+import { Templates, FILES, type ITemplates } from './core/templates/Templates';
+import { StencilSettings } from './core/configuration';
 import { showInputField, type AcceptValidatingResult } from './core/InputField';
 import { fm } from './core/FileManager';
 
@@ -21,7 +22,7 @@ export class Stencil {
     // private fileBuilder: IFileBuilder; // + options
     // private fileDirector: IFileDirector;
 
-    constructor(file: vscode.Uri) {
+    constructor(file: vscode.Uri, private settings: StencilSettings) {
         this.file = file;
 
         this.templates = new Templates();
