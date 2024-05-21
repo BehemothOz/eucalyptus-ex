@@ -3,25 +3,30 @@ import * as vscode from 'vscode';
 export type StyleFileExtension = 'css' | 'scss' | 'less';
 export type JavaScriptFileExtension = 'js' | 'ts';
 
-export class Configuration {
+interface IConfiguration {
+    getStyleFileExtension: () => StyleFileExtension;
+    getJavaScriptFileExtension: () => JavaScriptFileExtension;
+    getCssModulesUsedFlag: () => boolean;
+}
+
+export class Configuration implements IConfiguration {
     constructor(private settings: vscode.WorkspaceConfiguration) {}
 
-    needUseCssModules(): boolean {
+    getCssModulesUsedFlag(): boolean {
         return this.settings.get<boolean>('useCssModules') ?? false;
     }
 
     getStyleFileExtension() {
-        const styleFormat = this.settings.get('styleFormat');
-        return;
+        return this.settings.get<StyleFileExtension>('styleFormat') ?? 'css';
     }
 
     getJavaScriptFileExtension() {
-        const needUseTypeScript = this.settings.get('useTypescript');
+        const needUseTypeScript = this.settings.get<boolean>('useTypescript');
 
-        if (needUseTypeScript) {
-            return 'ts';
+        if (needUseTypeScript === undefined) {
+            return 'js';
         }
 
-        return 'js';
+        return needUseTypeScript ? 'ts' : 'js';
     }
 }
