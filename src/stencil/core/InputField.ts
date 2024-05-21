@@ -15,6 +15,15 @@ interface InputFieldProps extends vscode.InputBoxOptions {
     validateAccept: (value: string) => { isValid: boolean; message: string | undefined };
 }
 
+// function getPromiseWithResolvers() {
+//     let _resolve, _reject
+//     const promise = new Promise((res, rej)=>{
+//        _resolve = res;
+//        _reject = rej;
+//     })
+//     return {promise, resolve: _resolve, reject: _reject}
+//  }
+
 /**
  * Add an extra level of validation before invoking the provided validation function.
  */

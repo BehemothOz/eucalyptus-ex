@@ -9,8 +9,12 @@ export interface IFileManager {
 
 export class FileManager implements IFileManager {
     exist(uri: vscode.Uri) {
-        console.log('exist uri', uri);
         return fs.existsSync(uri.fsPath);
+    }
+
+    async isDirectory(uri: vscode.Uri): Promise<boolean> {
+        const stat = await vscode.workspace.fs.stat(uri);
+        return stat.type === vscode.FileType.Directory;
     }
 
     joinPath(root: vscode.Uri, fileName: string): vscode.Uri {

@@ -10,7 +10,6 @@ function hasSpaces(str: string): boolean {
 }
 
 function isExistDirectory(directoryPath: vscode.Uri): boolean {
-    // fs.lstatSync(directoryPath).isDirectory()
     return fm.exist(directoryPath);
 }
 
@@ -19,7 +18,7 @@ export class Stencil {
 
     private templates: ITemplates;
 
-    // private fileBuilder: IFileBuilder;
+    // private fileBuilder: IFileBuilder; // + options
     // private fileDirector: IFileDirector;
 
     constructor(file: vscode.Uri) {
@@ -44,14 +43,16 @@ export class Stencil {
             validateAccept(value) {
                 const result: AcceptValidatingResult = { isValid: true, message: undefined };
 
-                if (hasSpaces(value)) {
-                    result.isValid = false;
-                    result.message = 'The name cannot contain spaces';
-                }
+                // if (hasSpaces(value)) {
+                //     result.isValid = false;
+                //     result.message = 'The name cannot contain spaces';
+
+                //     return result;
+                // }
 
                 if (isExistDirectory(join(value))) {
                     result.isValid = false;
-                    result.message = `A folder already ${value} exists at this location`;
+                    result.message = `A folder ${value} already exists at this location`;
                 }
 
                 return result;

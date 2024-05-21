@@ -20,8 +20,17 @@ export interface ITemplates {
 }
 
 export const templates: Record<TemplateKey, Template> = {
+    /*
+     ...    
+    */
     template_a: [FILES.COMPONENT_FILE, FILES.STYLE_FILE, FILES.INDEX_FILE],
+    /*
+     ...    
+    */
     template_b: [FILES.COMPONENT_FILE, FILES.INDEX_FILE],
+    /*
+     ...    
+    */
     template_c: [FILES.COMPONENT_FILE, FILES.STYLE_FILE],
 };
 

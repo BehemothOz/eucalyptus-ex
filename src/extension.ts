@@ -30,7 +30,9 @@ export function activate(context: vscode.ExtensionContext) {
 
         vscode.window.showInformationMessage('EXIST FILE');
 
-        const stencil = new Stencil(file);
+        const settings = vscode.workspace.getConfiguration('stencil');
+
+        const stencil = new Stencil(file, settings);
         stencil.initialization();
     });
 
