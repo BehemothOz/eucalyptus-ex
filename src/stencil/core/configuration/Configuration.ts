@@ -1,5 +1,8 @@
 import * as vscode from 'vscode';
 
+export type StyleFileExtension = 'css' | 'scss' | 'less';
+export type JavaScriptFileExtension = 'js' | 'ts';
+
 export class Configuration {
     constructor(private settings: vscode.WorkspaceConfiguration) {}
 
