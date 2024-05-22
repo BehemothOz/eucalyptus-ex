@@ -2,6 +2,9 @@ import * as vscode from 'vscode';
 
 export type StyleFileExtension = 'css' | 'scss' | 'less';
 export type JavaScriptFileExtension = 'js' | 'ts';
+export interface Flags {
+    useCssModules: boolean;
+}
 
 export interface StencilSettings {
     getStyleFileExtension: () => StyleFileExtension;

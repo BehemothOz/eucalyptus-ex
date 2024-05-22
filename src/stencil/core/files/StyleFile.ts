@@ -1,6 +1,5 @@
 import { File } from './File';
-
-type StyleFileExtension = 'css' | 'scss';
+import type { StyleFileExtension } from '../configuration';
 
 /*
     import './MyComponent.css';
@@ -11,7 +10,7 @@ type StyleFileExtension = 'css' | 'scss';
 */
 
 export class StyleFile extends File<StyleFileExtension> {
-    constructor(name: string) {
+    constructor(name: string, extension: StyleFileExtension) {
         super(`${name}.module`, 'scss');
     }
 

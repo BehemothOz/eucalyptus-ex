@@ -19,16 +19,16 @@ export class Stencil {
 
     private templates: ITemplates;
 
-    // private fileBuilder: IFileBuilder; // + options
-    // private fileDirector: IFileDirector;
+    private fileBuilder: IFileBuilder;
+    private fileDirector: IFileDirector;
 
-    constructor(file: vscode.Uri, private settings: StencilSettings) {
+    constructor(file: vscode.Uri, settings: StencilSettings) {
         this.file = file;
 
         this.templates = new Templates();
 
-        // this.fileBuilder = new FileBuilder();
-        // this.fileDirector = new FileDirector(this.fileBuilder);
+        this.fileBuilder = new FileBuilder(settings);
+        this.fileDirector = new FileDirector(this.fileBuilder);
     }
 
     /*
@@ -76,10 +76,10 @@ export class Stencil {
 
         console.log('valueFromInputBox', valueFromInputBox);
 
-        // if (valueFromInputBox) {
-        // } else {
-        //     return;
-        // }
+        if (valueFromInputBox) {
+        } else {
+            return;
+        }
 
         // const selectedTemplate = await this.showQuickPick();
         // const templateId = selectedTemplate?.id as TemplateId;
