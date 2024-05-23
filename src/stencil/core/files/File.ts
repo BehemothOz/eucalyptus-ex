@@ -7,7 +7,7 @@ export interface FileSignature {
 }
 
 export abstract class File<Extension> extends ModuleTransferBuilder implements FileSignature {
-    constructor(private name: string, private extension: Extension) {
+    constructor(protected name: string, protected extension: Extension) {
         super();
     }
 
