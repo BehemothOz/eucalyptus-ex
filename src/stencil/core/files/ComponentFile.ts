@@ -1,7 +1,7 @@
 import { File } from './File';
-import type { JavaScriptFileExtension, Flags } from '../configuration';
+import type { JavaScriptFileExtension } from '../configuration';
 
-interface ComponentFileOptions extends Flags {}
+type ComponentFileExtension = JavaScriptFileExtension | 'tsx';
 
 const tag = (_s: TemplateStringsArray, imports: Array<string>, nameExp: string) => {
     const header = imports.join(`\n`);
@@ -13,13 +13,17 @@ export const ${nameExp} = () => {
 `;
 };
 
-export class ComponentFile extends File<JavaScriptFileExtension> {
-    constructor(name: string = 'Component', extension: JavaScriptFileExtension, options: ComponentFileOptions) {
-        super(name, 'ts');
+export class ComponentFile extends File<ComponentFileExtension> {
+    constructor(name: string = 'Component', extension: JavaScriptFileExtension) {
+        super(name, ComponentFile.addXMLSuffix(extension));
     }
 
     getContent(): string {
         // return tag`${this.imports}${this.name}`;
         return '';
+    }
+
+    static addXMLSuffix(extension: JavaScriptFileExtension) {
+        return extension.replace(/(ts)/, '$1' + 'x') as ComponentFileExtension;
     }
 }
