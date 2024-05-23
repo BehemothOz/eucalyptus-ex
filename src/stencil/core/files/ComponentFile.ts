@@ -1,5 +1,7 @@
 import { File } from './File';
-import type { JavaScriptFileExtension } from '../configuration';
+import type { JavaScriptFileExtension, Flags } from '../configuration';
+
+interface ComponentFileOptions extends Flags {}
 
 const tag = (_s: TemplateStringsArray, imports: Array<string>, nameExp: string) => {
     const header = imports.join(`\n`);
@@ -11,9 +13,9 @@ export const ${nameExp} = () => {
 `;
 };
 
-export class ComponentFile extends File {
-    constructor(name: string = 'Component', extension: JavaScriptFileExtension) {
-        super(name, 'tsx');
+export class ComponentFile extends File<JavaScriptFileExtension> {
+    constructor(name: string = 'Component', extension: JavaScriptFileExtension, options: ComponentFileOptions) {
+        super(name, 'ts');
     }
 
     getContent(): string {

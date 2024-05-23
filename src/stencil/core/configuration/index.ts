@@ -1,2 +1,2 @@
 export { Configuration } from './Configuration';
-export type { StencilSettings, StyleFileExtension, JavaScriptFileExtension } from './Configuration';
+export type { StencilSettings, StyleFileExtension, JavaScriptFileExtension, Flags } from './Configuration';
