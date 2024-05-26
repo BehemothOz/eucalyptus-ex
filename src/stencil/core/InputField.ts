@@ -3,26 +3,29 @@ import * as vscode from 'vscode';
 /**
  * Interface representing the result of the validation process.
  */
-export interface AcceptValidatingResult {
-    isValid: boolean;
-    message: string | undefined;
-}
+type AcceptValidatingResult = string | null | undefined;
 
 /**
  * Interface representing the properties of an input field
  */
-interface InputFieldProps extends vscode.InputBoxOptions {
-    validateAccept: (value: string) => { isValid: boolean; message: string | undefined };
+interface InputFieldProps {
+    /**
+     * Optional placeholder shown when no value has been input.
+     */
+    placeholder: vscode.InputBox['placeholder'];
+    /**
+     * An optional prompt text providing some ask or explanation to the user.
+     */
+    prompt: vscode.InputBox['prompt'];
+    /**
+     * Selection range in the input value.
+     */
+    valueSelection: vscode.InputBox['valueSelection'];
+    /**
+     * Checking the input value after pressing the "Enter" key.
+     */
+    validateAccept: (value: string) => AcceptValidatingResult;
 }
-
-// function getPromiseWithResolvers() {
-//     let _resolve, _reject
-//     const promise = new Promise((res, rej)=>{
-//        _resolve = res;
-//        _reject = rej;
-//     })
-//     return {promise, resolve: _resolve, reject: _reject}
-//  }
 
 /**
  * Add an extra level of validation before invoking the provided validation function.
@@ -47,7 +50,7 @@ export class InputField {
         /**
          * Optional placeholder shown when no value has been input.
          */
-        this.inputBox.placeholder = params.placeHolder;
+        this.inputBox.placeholder = params.placeholder;
         /**
          * An optional prompt text providing some ask or explanation to the user.
          */
@@ -103,12 +106,12 @@ export class InputField {
      * @private
      */
     private accept() {
-        const { isValid, message } = this.validateAccept(this._value);
+        const validatingResult = this.validateAccept(this._value);
 
-        if (isValid) {
-            this.hide();
+        if (typeof validatingResult === 'string') {
+            this.inputBox.validationMessage = validatingResult;
         } else {
-            this.inputBox.validationMessage = message;
+            this.hide();
         }
     }
 

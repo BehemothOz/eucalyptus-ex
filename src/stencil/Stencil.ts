@@ -3,7 +3,8 @@ import * as vscode from 'vscode';
 import { FileBuilder, FileDirector, type IFileBuilder, type IFileDirector } from './core/builders';
 import { Templates, FILES, type ITemplates } from './core/templates/Templates';
 import { StencilSettings } from './core/configuration';
-import { showInputField, type AcceptValidatingResult } from './core/InputField';
+
+import { showInputField } from './core/InputField';
 import { fm } from './core/FileManager';
 
 function hasSpaces(str: string): boolean {
@@ -38,25 +39,19 @@ export class Stencil {
         const join = (value: string) => fm.joinPath(this.file, value);
 
         return await showInputField({
-            placeHolder: 'New directory',
+            placeholder: 'New directory',
             prompt: 'Enter the name of the directory',
             valueSelection: [-1, -1],
             validateAccept(value) {
-                const result: AcceptValidatingResult = { isValid: true, message: undefined };
-
-                // if (hasSpaces(value)) {
-                //     result.isValid = false;
-                //     result.message = 'The name cannot contain spaces';
-
-                //     return result;
-                // }
-
-                if (isExistDirectory(join(value))) {
-                    result.isValid = false;
-                    result.message = `A folder ${value} already exists at this location`;
+                if (hasSpaces(value)) {
+                    return 'The name cannot contain spaces';
                 }
 
-                return result;
+                if (isExistDirectory(join(value))) {
+                    return `A folder ${value} already exists at this location`;
+                }
+
+                return null;
             },
         });
     }
