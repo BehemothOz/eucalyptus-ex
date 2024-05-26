@@ -29,7 +29,7 @@ type ImportPayload = {
       }
 );
 
-export class ModuleTransferBuilder {
+export class ModularSystemTransfer {
     exports: Array<string> = [];
     imports: Array<string> = [];
 

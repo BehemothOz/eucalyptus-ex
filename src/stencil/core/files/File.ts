@@ -1,4 +1,4 @@
-import { ModuleTransferBuilder } from '../builders';
+import { ModularSystemTransfer } from '../modular';
 
 export interface FileSignature {
     getName: () => string;
@@ -6,9 +6,13 @@ export interface FileSignature {
     getContent: () => string;
 }
 
-export abstract class File<Extension> extends ModuleTransferBuilder implements FileSignature {
-    constructor(protected name: string, protected extension: Extension) {
+export abstract class File<Extension> extends ModularSystemTransfer implements FileSignature {
+    name: string;
+    extension: Extension;
+    constructor(name: string, extension: Extension) {
         super();
+        this.name = name;
+        this.extension = extension;
     }
 
     getName() {

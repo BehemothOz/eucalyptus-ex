@@ -6,7 +6,7 @@ import type { FileSignature } from '../files';
 import type { IFileBuilder } from './types';
 
 export class FileBuilder implements IFileBuilder {
-    _files: Map<FILES, FileSignature>;
+    _files: Map<any, any>;
 
     constructor(private settings: StencilSettings) {
         this._files = new Map();
@@ -16,25 +16,25 @@ export class FileBuilder implements IFileBuilder {
         const extension = this.settings.getStyleFileExtension();
         const useCssModules = this.settings.getCssModulesUsedFlag();
 
-        const file = new StyleFile(fileName, extension, { useCssModules });
+        // const file = new StyleFile(fileName, extension, { useCssModules });
 
-        this._files.set(FILES.STYLE_FILE, file);
+        // this._files.set(FILES.STYLE_FILE, file);
         return this;
     }
 
     addComponentFile(fileName: string) {
         const extension = this.settings.getJavaScriptFileExtension();
-        const file = new ComponentFile(fileName, extension);
+        // const file = new ComponentFile(fileName, extension);
 
-        this._files.set(FILES.COMPONENT_FILE, file);
+        // this._files.set(FILES.COMPONENT_FILE, file);
         return this;
     }
 
     addIndexFile(fileName: string) {
         const extension = this.settings.getJavaScriptFileExtension();
-        const file = new IndexFile(fileName, extension);
+        // const file = new IndexFile(fileName, extension);
 
-        this._files.set(FILES.INDEX_FILE, file);
+        // this._files.set(FILES.INDEX_FILE, file);
         return this;
     }
 

@@ -13,6 +13,7 @@ export class IndexFile extends File<JavaScriptFileExtension> {
     }
 
     getContent(): string {
-        return tag`${this.exports}`;
+        // return tag`${this.exports}`;
+        return '';
     }
 }

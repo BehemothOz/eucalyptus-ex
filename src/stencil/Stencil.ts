@@ -38,22 +38,26 @@ export class Stencil {
     private async showInput() {
         const join = (value: string) => fm.joinPath(this.file, value);
 
-        return await showInputField({
-            placeholder: 'New directory',
-            prompt: 'Enter the name of the directory',
-            valueSelection: [-1, -1],
-            validateAccept(value) {
-                if (hasSpaces(value)) {
-                    return 'The name cannot contain spaces';
-                }
+        try {
+            return await showInputField({
+                placeholder: 'New directory',
+                prompt: 'Enter the name of the directory',
+                valueSelection: [-1, -1],
+                validateAccept(value) {
+                    if (hasSpaces(value)) {
+                        return 'The name cannot contain spaces';
+                    }
 
-                if (isExistDirectory(join(value))) {
-                    return `A folder ${value} already exists at this location`;
-                }
+                    if (isExistDirectory(join(value))) {
+                        return `A folder ${value} already exists at this location`;
+                    }
 
-                return null;
-            },
-        });
+                    return null;
+                },
+            });
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     /*

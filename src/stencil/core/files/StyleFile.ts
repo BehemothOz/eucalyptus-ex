@@ -1,10 +1,10 @@
 import { File } from './File';
 import type { StyleFileExtension, Flags } from '../configuration';
 
-interface StyleFileOptions extends Flags {}
+// interface StyleFileOptions extends Flags {}
 
 export class StyleFile extends File<StyleFileExtension> {
-    constructor(name: string, extension: StyleFileExtension, private options: StyleFileOptions) {
+    constructor(name: string, extension: StyleFileExtension, private options: any) {
         super(name, extension);
     }
 
