@@ -1,17 +1,31 @@
-import type { IFileBuilder, FileNames } from './types';
+import { TemplateKey } from '../templates/Templates';
+import type { IFileBuilder, IFileDirector } from './types';
 
-export class FileDirector {
-    constructor(private builder: IFileBuilder) {}
+function MethodDecorator(target: (...args: any[]) => any, _context: ClassMethodDecoratorContext) {
+    console.log(`Logging ${12} function`);
+    function replacementMethod(this: any, ...args: any[]) {
+        console.log("LOG: Entering method.")
+        const result = originalMethod.call(this, ...args);
+        console.log("LOG: Exiting method.")
+        return result;
+    }
+}
 
-    public buildByATemplate(names: FileNames): void {
-        this.builder.addStyleFile(names.styleName).addComponentFile(names.componentName).addIndexFile(names.indexName);
+export class FileDirector implements IFileDirector {
+    constructor(private builder: IFileBuilder) {
+        const builderRegistry: { [key: string]: Function } = {};
     }
 
-    public buildByBTemplate(names: Omit<FileNames, 'styleName'>): void {
-        this.builder.addComponentFile(names.componentName).addIndexFile(names.indexName);
+    @MethodDecorator
+    public buildByATemplate(directoryName: string): void {
+        this.builder.addStyleFile(directoryName).addComponentFile(directoryName).addIndexFile();
     }
 
-    public buildByCTemplate(names: Omit<FileNames, 'indexName'>): void {
-        this.builder.addStyleFile(names.styleName).addComponentFile(names.componentName);
+    public buildByBTemplate(directoryName: string): void {
+        this.builder.addComponentFile(directoryName).addIndexFile();
+    }
+
+    public buildByCTemplate(directoryName: string): void {
+        this.builder.addStyleFile(directoryName).addComponentFile(directoryName);
     }
 }

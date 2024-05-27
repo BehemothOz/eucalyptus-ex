@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 import { FileBuilder, FileDirector, type IFileBuilder, type IFileDirector } from './core/builders';
-import { Templates, FILES, type ITemplates } from './core/templates/Templates';
+import { TemplatesManager, type ITemplatesManager, type TemplateKey, type Template } from './core/templates/Templates';
 import { StencilSettings } from './core/configuration';
 
 import { showInputField } from './core/InputField';
@@ -18,7 +18,7 @@ function isExistDirectory(directoryPath: vscode.Uri): boolean {
 export class Stencil {
     private file: vscode.Uri;
 
-    private templates: ITemplates;
+    private templates: ITemplatesManager;
 
     private fileBuilder: IFileBuilder;
     private fileDirector: IFileDirector;
@@ -26,7 +26,7 @@ export class Stencil {
     constructor(file: vscode.Uri, settings: StencilSettings) {
         this.file = file;
 
-        this.templates = new Templates();
+        this.templates = new TemplatesManager();
 
         this.fileBuilder = new FileBuilder(settings);
         this.fileDirector = new FileDirector(this.fileBuilder);
@@ -38,36 +38,33 @@ export class Stencil {
     private async showInput() {
         const join = (value: string) => fm.joinPath(this.file, value);
 
-        try {
-            return await showInputField({
-                placeholder: 'New directory',
-                prompt: 'Enter the name of the directory',
-                valueSelection: [-1, -1],
-                validateAccept(value) {
-                    if (hasSpaces(value)) {
-                        return 'The name cannot contain spaces';
-                    }
+        return await showInputField({
+            placeholder: 'New directory',
+            prompt: 'Enter the name of the directory',
+            valueSelection: [-1, -1],
+            validateAccept(value) {
+                if (hasSpaces(value)) {
+                    return 'The name cannot contain spaces';
+                }
 
-                    if (isExistDirectory(join(value))) {
-                        return `A folder ${value} already exists at this location`;
-                    }
+                if (isExistDirectory(join(value))) {
+                    return `A folder ${value} already exists at this location`;
+                }
 
-                    return null;
-                },
-            });
-        } catch (err) {
-            console.log(err);
-        }
+                return null;
+            },
+        });
     }
 
     /*
         https://code.visualstudio.com/api/references/vscode-api#window.showQuickPick
     */
     private async showQuickPick() {
-        // const templateItems = [];
-        // return await vscode.window.showQuickPick(templateItems, {
-        //     placeHolder: 'Select template',
-        // });
+        const options = this.templates.getTemplates();
+
+        return await vscode.window.showQuickPick(options, {
+            placeHolder: 'Select template',
+        });
     }
 
     public async initialization() {
@@ -80,16 +77,17 @@ export class Stencil {
             return;
         }
 
-        // const selectedTemplate = await this.showQuickPick();
-        // const templateId = selectedTemplate?.id as TemplateId;
+        const selectedTemplate = await this.showQuickPick();
 
-        // if (selectedTemplate) {
-        // } else {
-        //     return;
-        // }
+        console.log('selectedTemplate', selectedTemplate);
 
-        // const directoryUri = await this.createDirectory(valueFromInputBox);
-        // this.buildFilesByTemplateId(valueFromInputBox, templateId);
+        if (selectedTemplate) {
+        } else {
+            return;
+        }
+
+        const directoryUri = await this.createDirectory(valueFromInputBox);
+        this.createFilesByTemplate(valueFromInputBox, selectedTemplate);
 
         // await this.createFiles(directoryUri);
 
@@ -97,33 +95,23 @@ export class Stencil {
     }
 
     private async createDirectory(name: string) {
-        let directoryName = name;
-
-        if (fm.exist(fm.joinPath(this.file, name))) {
-            directoryName = `${directoryName} copy`;
-        }
-
-        const directoryUri = fm.joinPath(this.file, directoryName);
+        const directoryUri = fm.joinPath(this.file, name);
 
         await fm.createDirectory(directoryUri);
-
         return directoryUri;
     }
 
-    // private async createFiles(directoryUri: vscode.Uri) {
-    //     const files = this.fileBuilder.build();
+    private async createFiles(directoryUri: vscode.Uri) {
+        // const files = this.fileBuilder.build();
+        // const filesPromises = files.map(file => {
+        //     const name = file.getFullName();
+        //     const fileUri = this.fileManager.joinPath(directoryUri, name);
+        //     return this.fileManager.createFile(fileUri, file.getContent());
+        // });
+        // Promise.all(filesPromises);
+    }
 
-    //     const filesPromises = files.map(file => {
-    //         const name = file.getFullName();
-    //         const fileUri = this.fileManager.joinPath(directoryUri, name);
-
-    //         return this.fileManager.createFile(fileUri, file.getContent());
-    //     });
-
-    //     Promise.all(filesPromises);
-    // }
-
-    // private buildFilesByTemplateId(name: string, templateId: TemplateId) {
-    //     // const templateFiles = this.templates.getTemplateById(templateId);
-    // }
+    private async createFilesByTemplate(name: string, template: Template) {
+        console.log('template', template);
+    }
 }

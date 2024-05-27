@@ -1,9 +1,14 @@
 import { ComponentFile, StyleFile, IndexFile } from '../files';
-import { FILES } from '../templates/Templates';
 
 import type { StencilSettings } from '../configuration';
 import type { FileSignature } from '../files';
 import type { IFileBuilder } from './types';
+
+export enum FILES {
+    COMPONENT_FILE = 'component',
+    STYLE_FILE = 'style',
+    INDEX_FILE = 'index',
+}
 
 export class FileBuilder implements IFileBuilder {
     _files: Map<any, any>;
@@ -30,7 +35,7 @@ export class FileBuilder implements IFileBuilder {
         return this;
     }
 
-    addIndexFile(fileName: string) {
+    addIndexFile(fileName?: string) {
         const extension = this.settings.getJavaScriptFileExtension();
         // const file = new IndexFile(fileName, extension);
 
