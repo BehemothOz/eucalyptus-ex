@@ -1,31 +1,40 @@
 import { TemplateKey } from '../templates/Templates';
 import type { IFileBuilder, IFileDirector } from './types';
 
-function MethodDecorator(target: (...args: any[]) => any, _context: ClassMethodDecoratorContext) {
-    console.log(`Logging ${12} function`);
-    function replacementMethod(this: any, ...args: any[]) {
-        console.log("LOG: Entering method.")
-        const result = originalMethod.call(this, ...args);
-        console.log("LOG: Exiting method.")
-        return result;
-    }
+enum Some {
+    TEMPLATE_A = 'template_a',
+    TEMPLATE_B = 'template_b',
+    TEMPLATE_C = 'template_c',
 }
 
 export class FileDirector implements IFileDirector {
-    constructor(private builder: IFileBuilder) {
-        const builderRegistry: { [key: string]: Function } = {};
-    }
+    constructor(private builder: IFileBuilder) {}
 
-    @MethodDecorator
-    public buildByATemplate(directoryName: string): void {
+    buildByATemplate(directoryName: string): void {
         this.builder.addStyleFile(directoryName).addComponentFile(directoryName).addIndexFile();
     }
 
-    public buildByBTemplate(directoryName: string): void {
+    buildByBTemplate(directoryName: string): void {
         this.builder.addComponentFile(directoryName).addIndexFile();
     }
 
-    public buildByCTemplate(directoryName: string): void {
+    buildByCTemplate(directoryName: string): void {
         this.builder.addStyleFile(directoryName).addComponentFile(directoryName);
+    }
+
+    build(key: TemplateKey) {
+        switch (key) {
+            case Some.TEMPLATE_A:
+                this.buildByATemplate('a');
+                break;
+            case Some.TEMPLATE_A:
+                this.buildByBTemplate('a');
+                break;
+            case Some.TEMPLATE_A:
+                this.buildByCTemplate('a');
+                break;
+            default:
+                break;
+        }
     }
 }
