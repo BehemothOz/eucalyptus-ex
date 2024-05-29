@@ -109,7 +109,7 @@ export class Stencil {
     }
 
     private async createFilesByTemplate(name: string, template: Template) {
-        this.fileDirector.buildByATemplate(name);
+        this.fileDirector.buildByDiamondTemplate(name);
         console.log('template', template);
     }
 }

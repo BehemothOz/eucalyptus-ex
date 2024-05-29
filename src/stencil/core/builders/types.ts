@@ -8,8 +8,8 @@ export interface IFileBuilder {
 }
 
 export interface IFileDirector {
-    buildByATemplate: (name: string) => void;
-    buildByBTemplate: (name: string) => void;
-    buildByCTemplate: (name: string) => void;
+    buildByDiamondTemplate: (name: string) => void;
+    buildByRubyTemplate: (name: string) => void;
+    buildBySapphireTemplate: (name: string) => void;
 }
 

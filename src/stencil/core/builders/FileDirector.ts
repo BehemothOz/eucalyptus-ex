@@ -1,37 +1,31 @@
 import { TemplateKey } from '../templates/Templates';
 import type { IFileBuilder, IFileDirector } from './types';
 
-enum TemplatesKeys {
-    DIAMOND = 'diamond_template',
-    RUBY = 'ruby_template',
-    SAPPHIRE = 'sapphire_template',
-}
-
 export class FileDirector implements IFileDirector {
     constructor(private builder: IFileBuilder) {}
 
-    buildByATemplate(directoryName: string): void {
+    buildByDiamondTemplate(directoryName: string): void {
         this.builder.addStyleFile(directoryName).addComponentFile(directoryName).addIndexFile();
     }
 
-    buildByBTemplate(directoryName: string): void {
+    buildByRubyTemplate(directoryName: string): void {
         this.builder.addComponentFile(directoryName).addIndexFile();
     }
 
-    buildByCTemplate(directoryName: string): void {
+    buildBySapphireTemplate(directoryName: string): void {
         this.builder.addStyleFile(directoryName).addComponentFile(directoryName);
     }
 
-    build(key: TemplateKey) {
+    buildByTemplateKey(key: TemplateKey) {
         switch (key) {
-            case Some.TEMPLATE_A:
-                this.buildByATemplate('a');
+            case TemplateKey.DIAMOND:
+                this.buildByDiamondTemplate('a');
                 break;
-            case Some.TEMPLATE_A:
-                this.buildByBTemplate('a');
+            case TemplateKey.RUBY:
+                this.buildByRubyTemplate('a');
                 break;
-            case Some.TEMPLATE_A:
-                this.buildByCTemplate('a');
+            case TemplateKey.SAPPHIRE:
+                this.buildBySapphireTemplate('a');
                 break;
             default:
                 break;
