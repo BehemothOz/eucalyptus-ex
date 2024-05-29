@@ -32,9 +32,6 @@ export class Stencil {
         this.fileDirector = new FileDirector(this.fileBuilder);
     }
 
-    /*
-        https://code.visualstudio.com/api/references/vscode-api#InputBoxOptions
-    */
     private async showInput() {
         const join = (value: string) => fm.joinPath(this.file, value);
 

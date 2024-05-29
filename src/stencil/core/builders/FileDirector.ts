@@ -1,10 +1,10 @@
 import { TemplateKey } from '../templates/Templates';
 import type { IFileBuilder, IFileDirector } from './types';
 
-enum Some {
-    TEMPLATE_A = 'template_a',
-    TEMPLATE_B = 'template_b',
-    TEMPLATE_C = 'template_c',
+enum TemplatesKeys {
+    DIAMOND = 'diamond_template',
+    RUBY = 'ruby_template',
+    SAPPHIRE = 'sapphire_template',
 }
 
 export class FileDirector implements IFileDirector {

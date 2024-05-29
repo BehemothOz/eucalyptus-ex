@@ -1,6 +1,8 @@
-
-
-export type TemplateKey = 'template_a' | 'template_b' | 'template_c';
+export enum TemplateKey {
+    DIAMOND = 'diamond_template',
+    RUBY = 'ruby_template',
+    SAPPHIRE = 'sapphire_template',
+}
 
 export interface Template {
     key: TemplateKey;
@@ -12,21 +14,21 @@ export interface ITemplatesManager {
     getTemplates: () => Array<Template>;
 }
 
-export const templates: Array<Template> = [
+const templates: Array<Template> = [
     {
-        key: 'template_a',
-        label: 'Template A',
-        detail: 'Contains the following files: component, style and index',
+        key: TemplateKey.DIAMOND,
+        label: 'Diamond Template',
+        detail: 'Contains files: component, style and index',
     },
     {
-        key: 'template_b',
-        label: 'Template B',
-        detail: 'Contains the following files: component and index',
+        key: TemplateKey.RUBY,
+        label: 'Ruby Template',
+        detail: 'Contains files: component and index',
     },
     {
-        key: 'template_c',
-        label: 'Template C',
-        detail: 'Contains the following files: component and style',
+        key: TemplateKey.SAPPHIRE,
+        label: 'Sapphire Template',
+        detail: 'Contains files: component and style',
     },
 ];
 
