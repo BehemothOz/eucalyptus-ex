@@ -13,7 +13,7 @@ export enum ExportType {
 type ExportPayload = {
     type: ExportType.NAMED;
     from: string;
-    entry: string;
+    module: string;
 };
 
 type ImportPayload = {
@@ -21,11 +21,11 @@ type ImportPayload = {
 } & (
     | {
           type: ImportType.DEFAULT | ImportType.NAMED;
-          entry: string;
+          module: string;
       }
     | {
           type: ImportType.GLOBAL;
-          entry?: undefined;
+          module?: undefined;
       }
 );
 
@@ -42,24 +42,24 @@ export class ModularSystemTransfer {
     }
 
     private _handleExportPayload(payload: ExportPayload) {
-        const { type, from, entry } = payload;
+        const { type, from, module } = payload;
 
         switch (type) {
             case ExportType.NAMED:
-                return reExportTag`{ ${entry} }${from}`;
+                return reExportTag`{ ${module} }${from}`;
             default:
                 return '';
         }
     }
 
     private _handleImportPayload(payload: ImportPayload) {
-        const { type, from, entry } = payload;
+        const { type, from, module } = payload;
 
         switch (type) {
             case ImportType.DEFAULT:
-                return importTag`${entry}${from}`;
+                return importTag`${module}${from}`;
             case ImportType.NAMED:
-                return importTag`{ ${entry} }${from}`;
+                return importTag`{ ${module} }${from}`;
             case ImportType.GLOBAL:
                 return importGlobalTag`${from}`;
             default:

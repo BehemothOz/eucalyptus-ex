@@ -37,8 +37,8 @@ export class FileBuilder implements IFileBuilder {
         if (styleFile) {
             file.addImport({
                 type: ImportType.DEFAULT,
-                from: styleFile.getImportingName(),
-                entry: styleFile.getNameWithExtension(),
+                module: styleFile.getImportingName(),
+                from: styleFile.getNameWithExtension(),
             });
         }
 
@@ -53,12 +53,10 @@ export class FileBuilder implements IFileBuilder {
         const componentFile = this._files.get(FILES.COMPONENT_FILE);
 
         if (componentFile) {
-            const styleFileName = componentFile.getName();
-
             file.addExport({
                 type: ExportType.NAMED,
-                from: styleFileName,
-                entry: styleFileName,
+                module: componentFile.getImportingName(),
+                from: componentFile.getNameWithExtension(),
             });
         }
 
