@@ -3,7 +3,7 @@ import { ComponentFile, StyleFile, IndexFile } from '../files';
 import type { StencilSettings } from '../configuration';
 import type { FileSignature } from '../files';
 import type { IFileBuilder } from './types';
-import { ImportType } from '../modular/ModularSystemTransfer';
+import { ImportType, ExportType } from '../modular/ModularSystemTransfer';
 
 export enum FILES {
     COMPONENT_FILE = 'component',
@@ -35,12 +35,10 @@ export class FileBuilder implements IFileBuilder {
         const styleFile = this._files.get(FILES.STYLE_FILE);
 
         if (styleFile) {
-            const styleFileName = styleFile.getName();
-
             file.addImport({
-                from: styleFileName,
                 type: ImportType.DEFAULT,
-                entry: styleFileName,
+                from: styleFile.getImportingName(),
+                entry: styleFile.getNameWithExtension(),
             });
         }
 
@@ -50,9 +48,21 @@ export class FileBuilder implements IFileBuilder {
 
     addIndexFile(fileName?: string) {
         const extension = this.settings.getJavaScriptFileExtension();
-        // const file = new IndexFile(fileName, extension);
+        const file = new IndexFile(fileName, extension);
 
-        // this._files.set(FILES.INDEX_FILE, file);
+        const componentFile = this._files.get(FILES.COMPONENT_FILE);
+
+        if (componentFile) {
+            const styleFileName = componentFile.getName();
+
+            file.addExport({
+                type: ExportType.NAMED,
+                from: styleFileName,
+                entry: styleFileName,
+            });
+        }
+
+        this._files.set(FILES.INDEX_FILE, file);
         return this;
     }
 
@@ -61,9 +71,9 @@ export class FileBuilder implements IFileBuilder {
     }
 
     build() {
-        const result = Array.from(this._files.values());
+        const files = Array.from(this._files.values());
 
         this.reset();
-        return result;
+        return files;
     }
 }

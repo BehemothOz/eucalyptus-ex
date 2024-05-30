@@ -16,16 +16,16 @@ export class FileDirector implements IFileDirector {
         this.builder.addStyleFile(directoryName).addComponentFile(directoryName);
     }
 
-    buildByTemplateKey(key: TemplateKey) {
+    buildByTemplateKey(key: TemplateKey, name: string) {
         switch (key) {
             case TemplateKey.DIAMOND:
-                this.buildByDiamondTemplate('a');
+                this.buildByDiamondTemplate(name);
                 break;
             case TemplateKey.RUBY:
-                this.buildByRubyTemplate('a');
+                this.buildByRubyTemplate(name);
                 break;
             case TemplateKey.SAPPHIRE:
-                this.buildBySapphireTemplate('a');
+                this.buildBySapphireTemplate(name);
                 break;
             default:
                 break;

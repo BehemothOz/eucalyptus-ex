@@ -1,4 +1,5 @@
 import type { FileSignature } from '../files';
+import type { TemplateKey } from '../templates/Templates';
 
 export interface IFileBuilder {
     addStyleFile: (directoryName: string) => this;
@@ -11,5 +12,5 @@ export interface IFileDirector {
     buildByDiamondTemplate: (name: string) => void;
     buildByRubyTemplate: (name: string) => void;
     buildBySapphireTemplate: (name: string) => void;
+    buildByTemplateKey: (key: TemplateKey, name: string) => void;
 }
-

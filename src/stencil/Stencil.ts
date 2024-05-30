@@ -94,7 +94,7 @@ export class Stencil {
     private async createDirectory(name: string) {
         const directoryUri = fm.joinPath(this.file, name);
 
-        await fm.createDirectory(directoryUri);
+        // await fm.createDirectory(directoryUri);
         return directoryUri;
     }
 
@@ -109,7 +109,9 @@ export class Stencil {
     }
 
     private async createFilesByTemplate(name: string, template: Template) {
-        this.fileDirector.buildByDiamondTemplate(name);
-        console.log('template', template);
+        this.fileDirector.buildByTemplateKey(template.key, name);
+
+        const files = this.fileBuilder.build();
+        console.log(files);
     }
 }
