@@ -1,10 +1,10 @@
 import { ModularSystemTransfer } from '../modular';
 
 export interface FileSignature {
-    getName: () => string;
+    getFileName: () => string;
     getImportingName: () => string;
-    getNameWithExtension: () => string;
-    getContent: () => string;
+    getFileNameWithExtension: () => string;
+    getFileContent: () => string;
 }
 
 export abstract class File<Extension> extends ModularSystemTransfer implements FileSignature {
@@ -14,7 +14,7 @@ export abstract class File<Extension> extends ModularSystemTransfer implements F
         this.extension = extension;
     }
 
-    getName() {
+    getFileName() {
         return this.name;
     }
 
@@ -22,9 +22,9 @@ export abstract class File<Extension> extends ModularSystemTransfer implements F
         return this.name;
     }
 
-    getNameWithExtension() {
+    getFileNameWithExtension() {
         return `${this.name}.${this.extension}`;
     }
 
-    abstract getContent(): string;
+    abstract getFileContent(): string;
 }
