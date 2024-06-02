@@ -15,7 +15,7 @@
     "commands": [
       {
         "command": "stencil-ui.createUIDirectory",
-        "title": "create UI Directory"
+        "title": "New UI Directory..."
       }
     ],
     "menus": {
