@@ -12,7 +12,7 @@ export class StyleFile extends File<StyleFileExtension> {
         return 'styles';
     }
 
-    getNameWithExtension() {
+    getFileNameWithExtension() {
         let name = this.name;
 
         if (this.options.useCssModules) {
@@ -22,7 +22,7 @@ export class StyleFile extends File<StyleFileExtension> {
         return `${name}.${this.extension}`;
     }
 
-    getContent(): string {
+    getFileContent(): string {
         return '';
     }
 }

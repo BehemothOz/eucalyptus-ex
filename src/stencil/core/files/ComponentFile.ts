@@ -6,11 +6,18 @@ type ComponentFileExtension = JavaScriptFileExtension | 'tsx';
 const tag = (_s: TemplateStringsArray, imports: Array<string>, nameExp: string) => {
     const header = imports.join(`\n`);
 
-    return `${header}
-export const ${nameExp} = () => {
-  return null;
+    const content = `export const ${nameExp} = () => {
+    return null;
 };
-`;
+    `;
+
+    if (header) {
+        return `${header}
+${content}
+    `;
+    }
+
+    return `${content}`;
 };
 
 export class ComponentFile extends File<ComponentFileExtension> {
@@ -18,9 +25,8 @@ export class ComponentFile extends File<ComponentFileExtension> {
         super(name, ComponentFile.addXMLSuffix(extension));
     }
 
-    getContent(): string {
-        // return tag`${this.imports}${this.name}`;
-        return '';
+    getFileContent(): string {
+        return tag`${this.imports}${this.name}`;
     }
 
     static addXMLSuffix(extension: JavaScriptFileExtension) {

@@ -12,8 +12,7 @@ export class IndexFile extends File<JavaScriptFileExtension> {
         super(name, extension);
     }
 
-    getContent(): string {
-        // return tag`${this.exports}`;
-        return '';
+    getFileContent(): string {
+        return tag`${this.exports}`;
     }
 }

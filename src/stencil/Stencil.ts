@@ -99,7 +99,6 @@ export class Stencil {
     }
 
     private async createFiles(directoryUri: vscode.Uri) {
-        // const files = this.fileBuilder.build();
         // const filesPromises = files.map(file => {
         //     const name = file.getFullName();
         //     const fileUri = this.fileManager.joinPath(directoryUri, name);
@@ -112,6 +111,13 @@ export class Stencil {
         this.fileDirector.buildByTemplateKey(template.key, name);
 
         const files = this.fileBuilder.build();
-        console.log(files);
+
+        files.forEach(file => {
+            console.group('FILE');
+            console.log('file', file);
+            console.log(file.getFileNameWithExtension());
+            console.log(file.getFileContent());
+            console.groupEnd();
+        });
     }
 }

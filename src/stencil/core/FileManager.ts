@@ -12,13 +12,13 @@ export class FileManager implements IFileManager {
         return fs.existsSync(uri.fsPath);
     }
 
+    joinPath(root: vscode.Uri, fileName: string): vscode.Uri {
+        return vscode.Uri.joinPath(root, fileName);
+    }
+
     async isDirectory(uri: vscode.Uri): Promise<boolean> {
         const stat = await vscode.workspace.fs.stat(uri);
         return stat.type === vscode.FileType.Directory;
-    }
-
-    joinPath(root: vscode.Uri, fileName: string): vscode.Uri {
-        return vscode.Uri.joinPath(root, fileName);
     }
 
     async createDirectory(directoryUri: vscode.Uri) {
