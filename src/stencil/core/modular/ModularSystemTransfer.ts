@@ -1,21 +1,41 @@
 import { importTag, importGlobalTag, reExportTag } from '../utils/tags';
 
+/**
+ * Enum for import types.
+ * @readonly
+ * @enum {string}
+ */
 export enum ImportType {
     DEFAULT = 'default',
     NAMED = 'named',
     GLOBAL = 'global',
 }
 
+/**
+ * Enum for export types.
+ * @readonly
+ * @enum {string}
+ */
 export enum ExportType {
     NAMED = 'named',
 }
 
+/**
+ * @property {string} from - The source module.
+ * @property {ExportType} type - The type of the export.
+ * @property {string} module - The module being exported.
+ */
 type ExportPayload = {
-    type: ExportType.NAMED;
     from: string;
+    type: ExportType.NAMED;
     module: string;
 };
 
+/**
+ * @property {string} from - The source module.
+ * @property {ImportType} type - The type of the import.
+ * @property {string} [module] - The module being imported (optional for global imports).
+ */
 type ImportPayload = {
     from: string;
 } & (
@@ -33,15 +53,27 @@ export class ModularSystemTransfer {
     exports: Array<string> = [];
     imports: Array<string> = [];
 
+    /**
+     * @param {ExportPayload} payload - The payload for the export.
+     */
     addExport(payload: ExportPayload) {
         this.exports.push(this._handleExportPayload(payload));
     }
 
+    /**
+     * @param {ImportPayload} payload - The payload for the import.
+     */
     addImport(payload: ImportPayload) {
         this.imports.push(this._handleImportPayload(payload));
     }
 
-    private _handleExportPayload(payload: ExportPayload) {
+    /**
+     * Handles the export payload and returns.
+     * @private
+     * @param {ExportPayload} payload - The payload for the export.
+     * @returns {string} The formatted export tag.
+     */
+    private _handleExportPayload(payload: ExportPayload): string {
         const { type, from, module } = payload;
 
         switch (type) {
@@ -52,7 +84,13 @@ export class ModularSystemTransfer {
         }
     }
 
-    private _handleImportPayload(payload: ImportPayload) {
+    /**
+     * Handles the import payload
+     * @private
+     * @param {ImportPayload} payload - The payload for the import.
+     * @returns {string} The formatted import tag.
+     */
+    private _handleImportPayload(payload: ImportPayload): string {
         const { type, from, module } = payload;
 
         switch (type) {

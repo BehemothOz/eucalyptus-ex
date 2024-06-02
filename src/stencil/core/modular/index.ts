@@ -1,1 +1,1 @@
-export { ModularSystemTransfer } from './ModularSystemTransfer';
+export { ModularSystemTransfer, ImportType, ExportType } from './ModularSystemTransfer';
