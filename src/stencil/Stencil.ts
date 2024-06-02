@@ -1,38 +1,53 @@
 import * as vscode from 'vscode';
 
 import { FileBuilder, FileDirector, type IFileBuilder, type IFileDirector } from './core/builders';
-import { TemplatesManager, type ITemplatesManager, type TemplateKey, type Template } from './core/templates/Templates';
+import { TemplatesManager, type ITemplatesManager, type Template } from './core/templates';
 import { StencilSettings } from './core/configuration';
 
 import { showInputField } from './core/ui';
 import { fm } from './core/FileManager';
 
+/**
+ * Checks if a string contains spaces.
+ * @param {string} str - The string to check.
+ * @returns {boolean} True if the string contains spaces, false otherwise.
+ */
 function hasSpaces(str: string): boolean {
     return /\s/.test(str);
 }
 
-function isExistDirectory(directoryPath: vscode.Uri): boolean {
-    return fm.exist(directoryPath);
-}
-
 export class Stencil {
     private file: vscode.Uri;
-
     private templates: ITemplatesManager;
 
     private fileBuilder: IFileBuilder;
     private fileDirector: IFileDirector;
 
     constructor(file: vscode.Uri, settings: StencilSettings) {
+        /**
+         * The selected directory where the template files will be added.
+         */
         this.file = file;
-
+        /**
+         * Managing available templates.
+         */
         this.templates = new TemplatesManager();
-
+        /**
+         * File build management.
+         */
         this.fileBuilder = new FileBuilder(settings);
+        /**
+         * Extension of the FileBuilder.
+         */
         this.fileDirector = new FileDirector(this.fileBuilder);
     }
 
-    private async showInput() {
+    /**
+     * Shows an input box to the user.
+     * @returns {Promise<string | null>} The user input or undefined if the input was cancelled.
+     * @private
+     */
+    private async showInput(): Promise<string | null> {
         const join = (value: string) => fm.joinPath(this.file, value);
 
         return await showInputField({
@@ -44,7 +59,7 @@ export class Stencil {
                     return 'The name cannot contain spaces';
                 }
 
-                if (isExistDirectory(join(value))) {
+                if (fm.exist(join(value))) {
                     return `A folder ${value} already exists at this location`;
                 }
 
@@ -53,10 +68,12 @@ export class Stencil {
         });
     }
 
-    /*
-        https://code.visualstudio.com/api/references/vscode-api#window.showQuickPick
-    */
-    private async showQuickPick() {
+    /**
+     * Shows a quick pick dialog to the user to select a template.
+     * @returns {Promise<Template | undefined>} The selected template or undefined if no selection was made.
+     * @private
+     */
+    private async showQuickPick(): Promise<Template | undefined> {
         const options = this.templates.getTemplates();
 
         return await vscode.window.showQuickPick(options, {
@@ -64,7 +81,11 @@ export class Stencil {
         });
     }
 
-    public async initialization() {
+    /**
+     * Initializes the stencil creation process.
+     * @returns {Promise<void>}
+     */
+    public async initialization(): Promise<void> {
         const valueFromInputBox = await this.showInput();
 
         console.log('valueFromInputBox', valueFromInputBox);
@@ -91,14 +112,26 @@ export class Stencil {
         return;
     }
 
-    private async createDirectory(name: string) {
+    /**
+     * Creates a directory with the specified name.
+     * @param {string} name - The name of the directory.
+     * @returns {Promise<vscode.Uri>} The URI of the created directory.
+     * @private
+     */
+    private async createDirectory(name: string): Promise<vscode.Uri> {
         const directoryUri = fm.joinPath(this.file, name);
 
         // await fm.createDirectory(directoryUri);
         return directoryUri;
     }
 
-    private async createFiles(directoryUri: vscode.Uri) {
+    /**
+     * Creates files in the specified directory.
+     * @param {vscode.Uri} directoryUri - The URI of the directory.
+     * @returns {Promise<void>}
+     * @private
+     */
+    private async createFiles(directoryUri: vscode.Uri): Promise<void> {
         // const filesPromises = files.map(file => {
         //     const name = file.getFullName();
         //     const fileUri = this.fileManager.joinPath(directoryUri, name);
@@ -107,7 +140,14 @@ export class Stencil {
         // Promise.all(filesPromises);
     }
 
-    private async createFilesByTemplate(name: string, template: Template) {
+    /**
+     * Creates files in a directory based on the specified template.
+     * @param {string} name - The name of the directory.
+     * @param {Template} template - The template to use for file creation.
+     * @returns {Promise<void>}
+     * @private
+     */
+    private async createFilesByTemplate(name: string, template: Template): Promise<void> {
         this.fileDirector.buildByTemplateKey(template.key, name);
 
         const files = this.fileBuilder.build();
