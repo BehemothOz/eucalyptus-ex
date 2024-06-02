@@ -3,9 +3,10 @@ import * as vscode from 'vscode';
 import { FileBuilder, FileDirector, type IFileBuilder, type IFileDirector } from './core/builders';
 import { TemplatesManager, type ITemplatesManager, type Template } from './core/templates';
 import { StencilSettings } from './core/configuration';
-
 import { showInputField } from './core/ui';
 import { fm } from './core/FileManager';
+
+import type { FileSignature } from './core/files';
 
 /**
  * Checks if a string contains spaces.
@@ -40,6 +41,31 @@ export class Stencil {
          * Extension of the FileBuilder.
          */
         this.fileDirector = new FileDirector(this.fileBuilder);
+    }
+
+    /**
+     * Initializes the stencil creation process.
+     * @returns {Promise<void>}
+     */
+    public async initialization(): Promise<void> {
+        const valueFromInputBox = await this.showInput();
+
+        if (valueFromInputBox) {
+        } else {
+            return;
+        }
+
+        const selectedTemplate = await this.showQuickPick();
+
+        if (selectedTemplate) {
+        } else {
+            return;
+        }
+
+        const directoryUri = await this.createDirectory(valueFromInputBox);
+        const files = await this.createFilesByTemplate(valueFromInputBox, selectedTemplate);
+
+        await this.createFiles(directoryUri, files);
     }
 
     /**
@@ -82,37 +108,6 @@ export class Stencil {
     }
 
     /**
-     * Initializes the stencil creation process.
-     * @returns {Promise<void>}
-     */
-    public async initialization(): Promise<void> {
-        const valueFromInputBox = await this.showInput();
-
-        console.log('valueFromInputBox', valueFromInputBox);
-
-        if (valueFromInputBox) {
-        } else {
-            return;
-        }
-
-        const selectedTemplate = await this.showQuickPick();
-
-        console.log('selectedTemplate', selectedTemplate);
-
-        if (selectedTemplate) {
-        } else {
-            return;
-        }
-
-        const directoryUri = await this.createDirectory(valueFromInputBox);
-        this.createFilesByTemplate(valueFromInputBox, selectedTemplate);
-
-        // await this.createFiles(directoryUri);
-
-        return;
-    }
-
-    /**
      * Creates a directory with the specified name.
      * @param {string} name - The name of the directory.
      * @returns {Promise<vscode.Uri>} The URI of the created directory.
@@ -121,7 +116,7 @@ export class Stencil {
     private async createDirectory(name: string): Promise<vscode.Uri> {
         const directoryUri = fm.joinPath(this.file, name);
 
-        // await fm.createDirectory(directoryUri);
+        await fm.createDirectory(directoryUri);
         return directoryUri;
     }
 
@@ -131,13 +126,15 @@ export class Stencil {
      * @returns {Promise<void>}
      * @private
      */
-    private async createFiles(directoryUri: vscode.Uri): Promise<void> {
-        // const filesPromises = files.map(file => {
-        //     const name = file.getFullName();
-        //     const fileUri = this.fileManager.joinPath(directoryUri, name);
-        //     return this.fileManager.createFile(fileUri, file.getContent());
-        // });
-        // Promise.all(filesPromises);
+    private async createFiles(directoryUri: vscode.Uri, files: FileSignature[]): Promise<void[]> {
+        const filesPromises = files.map(file => {
+            const fileName = file.getFileNameWithExtension();
+            const fileUri = fm.joinPath(directoryUri, fileName);
+
+            return fm.createFile(fileUri, file.getFileContent());
+        });
+
+        return Promise.all(filesPromises);
     }
 
     /**
@@ -147,17 +144,9 @@ export class Stencil {
      * @returns {Promise<void>}
      * @private
      */
-    private async createFilesByTemplate(name: string, template: Template): Promise<void> {
+    private async createFilesByTemplate(name: string, template: Template): Promise<FileSignature[]> {
         this.fileDirector.buildByTemplateKey(template.key, name);
 
-        const files = this.fileBuilder.build();
-
-        files.forEach(file => {
-            console.group('FILE');
-            console.log('file', file);
-            console.log(file.getFileNameWithExtension());
-            console.log(file.getFileContent());
-            console.groupEnd();
-        });
+        return this.fileBuilder.build();
     }
 }
