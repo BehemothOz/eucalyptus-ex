@@ -2,6 +2,10 @@ import { TemplateKey } from '../templates/Templates';
 import type { IFileBuilder, IFileDirector } from './types';
 
 export class FileDirector implements IFileDirector {
+    /**
+     * Creates an instance of FileDirector.
+     * @param {IFileBuilder} builder - The builder to be used by the director.
+     */
     constructor(private builder: IFileBuilder) {}
 
     buildByDiamondTemplate(directoryName: string): void {

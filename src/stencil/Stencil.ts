@@ -4,7 +4,7 @@ import { FileBuilder, FileDirector, type IFileBuilder, type IFileDirector } from
 import { TemplatesManager, type ITemplatesManager, type TemplateKey, type Template } from './core/templates/Templates';
 import { StencilSettings } from './core/configuration';
 
-import { showInputField } from './core/InputField';
+import { showInputField } from './core/ui';
 import { fm } from './core/FileManager';
 
 function hasSpaces(str: string): boolean {

@@ -3,8 +3,13 @@ import { ComponentFile, StyleFile, IndexFile } from '../files';
 import type { StencilSettings } from '../configuration';
 import type { FileSignature } from '../files';
 import type { IFileBuilder } from './types';
-import { ImportType, ExportType } from '../modular/ModularSystemTransfer';
+import { ImportType, ExportType } from '../modular';
 
+/**
+ * Enum representing different file types.
+ * @readonly
+ * @enum {string}
+ */
 export enum FILES {
     COMPONENT_FILE = 'component',
     STYLE_FILE = 'style',
@@ -12,7 +17,11 @@ export enum FILES {
 }
 
 export class FileBuilder implements IFileBuilder {
-    _files: Map<FILES, FileSignature>;
+    /**
+     * Map to store files being built.
+     * @private
+     */
+    private _files: Map<FILES, FileSignature>;
 
     constructor(private settings: StencilSettings) {
         this._files = new Map();
