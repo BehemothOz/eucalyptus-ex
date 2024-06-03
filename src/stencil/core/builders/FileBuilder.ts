@@ -1,9 +1,9 @@
 import { ComponentFile, StyleFile, IndexFile } from '../files';
+import { ImportType, ExportType } from '../modular';
 
 import type { StencilSettings } from '../configuration';
 import type { FileSignature } from '../files';
 import type { IFileBuilder } from './types';
-import { ImportType, ExportType } from '../modular';
 
 /**
  * Enum representing different file types.
@@ -37,16 +37,16 @@ export class FileBuilder implements IFileBuilder {
         return this;
     }
 
-    addComponentFile(fileName: string) {
+    addComponentFile(fileName: string, componentName?: string) {
         const extension = this.settings.getJavaScriptFileExtension();
-        const file = new ComponentFile(fileName, extension);
+        const file = new ComponentFile(fileName, extension, { componentName });
 
         const styleFile = this._files.get(FILES.STYLE_FILE);
 
         if (styleFile) {
             file.addImport({
                 type: ImportType.DEFAULT,
-                module: styleFile.getImportingName(),
+                module: styleFile.getInternalName(),
                 from: styleFile.getFileNameWithExtension(),
             });
         }
@@ -64,7 +64,7 @@ export class FileBuilder implements IFileBuilder {
         if (componentFile) {
             file.addExport({
                 type: ExportType.NAMED,
-                module: componentFile.getImportingName(),
+                module: componentFile.getInternalName(),
                 from: componentFile.getFileName(),
             });
         }

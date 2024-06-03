@@ -8,16 +8,20 @@ export class FileDirector implements IFileDirector {
      */
     constructor(private builder: IFileBuilder) {}
 
-    buildByDiamondTemplate(directoryName: string): void {
-        this.builder.addStyleFile(directoryName).addComponentFile(directoryName).addIndexFile();
+    buildByDiamondTemplate(directory: string): void {
+        this.builder.addStyleFile(directory).addComponentFile(directory).addIndexFile();
     }
 
-    buildByRubyTemplate(directoryName: string): void {
-        this.builder.addComponentFile(directoryName).addIndexFile();
+    buildByRubyTemplate(directory: string): void {
+        this.builder.addComponentFile(directory).addIndexFile();
     }
 
-    buildBySapphireTemplate(directoryName: string): void {
-        this.builder.addStyleFile(directoryName).addComponentFile(directoryName);
+    buildBySapphireTemplate(directory: string): void {
+        this.builder.addStyleFile(directory).addComponentFile(directory);
+    }
+
+    buildByEmeraldTemplate(directory: string): void {
+        this.builder.addStyleFile(directory).addComponentFile('index', directory);
     }
 
     buildByTemplateKey(key: TemplateKey, name: string) {
@@ -30,6 +34,9 @@ export class FileDirector implements IFileDirector {
                 break;
             case TemplateKey.SAPPHIRE:
                 this.buildBySapphireTemplate(name);
+                break;
+            case TemplateKey.EMERALD:
+                this.buildByEmeraldTemplate(name);
                 break;
             default:
                 break;
