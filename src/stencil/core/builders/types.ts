@@ -5,15 +5,15 @@ export interface IFileBuilder {
     /**
      * Adds a style file to the builder.
      */
-    addStyleFile: (directoryName: string) => this;
+    addStyleFile: (directory: string) => this;
     /**
      * Adds a component file to the builder.
      */
-    addComponentFile: (directoryName: string) => this;
+    addComponentFile: (directory: string, componentName?: string) => this;
     /**
      * Adds an index file to the builder.
      */
-    addIndexFile: (directoryName?: string) => this;
+    addIndexFile: (directory?: string) => this;
     /**
      * Resets the builder by clearing all files.
      */

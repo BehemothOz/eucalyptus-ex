@@ -8,7 +8,7 @@ export class StyleFile extends File<StyleFileExtension> {
         super(name, extension);
     }
 
-    getImportingName() {
+    getInternalName() {
         return 'styles';
     }
 

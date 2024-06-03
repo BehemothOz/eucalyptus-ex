@@ -6,9 +6,9 @@ export interface FileSignature {
      */
     getFileName: () => string;
     /**
-     * Gets the name used for importing the file.
+     * Helper method.
      */
-    getImportingName: () => string;
+    getInternalName: () => string;
     /**
      * Gets the file name with the extension.
      */
@@ -23,7 +23,6 @@ export abstract class File<Extension> extends ModularSystemTransfer implements F
     constructor(protected name: string, protected extension: Extension) {
         super();
     }
-
     /**
      * @returns {string} The file name.
      */
@@ -33,7 +32,7 @@ export abstract class File<Extension> extends ModularSystemTransfer implements F
     /**
      * @returns {string} The importing name.
      */
-    getImportingName(): string {
+    getInternalName(): string {
         return this.name;
     }
     /**

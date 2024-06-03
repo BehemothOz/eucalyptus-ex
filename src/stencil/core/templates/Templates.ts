@@ -7,6 +7,7 @@ export enum TemplateKey {
     DIAMOND = 'diamond_template',
     RUBY = 'ruby_template',
     SAPPHIRE = 'sapphire_template',
+    EMERALD = 'emerald_template',
 }
 
 /**
@@ -51,6 +52,11 @@ const templates: Array<Template> = [
         key: TemplateKey.SAPPHIRE,
         label: 'Sapphire Template',
         detail: 'Contains files: component and style',
+    },
+    {
+        key: TemplateKey.EMERALD,
+        label: 'Emerald Template',
+        detail: 'Contains files: style and index',
     },
 ];
 
