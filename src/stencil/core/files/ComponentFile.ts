@@ -38,7 +38,7 @@ export class ComponentFile extends File<ComponentFileExtension> {
     }
 
     getFileContent(): string {
-        return tag`${this.imports}${this.name}`;
+        return tag`${this.imports}${this.getInternalName()}`;
     }
 
     static addXMLSuffix(extension: JavaScriptFileExtension) {
