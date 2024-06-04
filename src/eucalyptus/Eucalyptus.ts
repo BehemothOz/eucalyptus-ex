@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 import { FileBuilder, FileDirector, type IFileBuilder, type IFileDirector } from './core/builders';
 import { TemplatesManager, type ITemplatesManager, type Template } from './core/templates';
-import { StencilSettings } from './core/configuration';
+import { EucalyptusSettings } from './core/configuration';
 import { showInputField } from './core/ui';
 import { fm } from './core/FileManager';
 
@@ -17,14 +17,14 @@ function hasSpaces(str: string): boolean {
     return /\s/.test(str);
 }
 
-export class Stencil {
+export class Eucalyptus {
     private file: vscode.Uri;
     private templates: ITemplatesManager;
 
     private fileBuilder: IFileBuilder;
     private fileDirector: IFileDirector;
 
-    constructor(file: vscode.Uri, settings: StencilSettings) {
+    constructor(file: vscode.Uri, settings: EucalyptusSettings) {
         /**
          * The selected directory where the template files will be added.
          */
@@ -44,7 +44,7 @@ export class Stencil {
     }
 
     /**
-     * Initializes the stencil creation process.
+     * Initializes the eucalyptus creation process.
      * @returns {Promise<void>}
      */
     public async initialization(): Promise<void> {

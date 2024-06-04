@@ -1,12 +1,12 @@
 {
-  "name": "stencil-ui",
-  "displayName": "stencil-ui",
+  "name": "eucalyptus",
+  "displayName": "eucalyptus",
   "description": "",
   "version": "1.0.0",
   "publisher": "WoodenHands",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BehemothOz/stencil-ex"
+    "url": "https://github.com/BehemothOz/eucalyptus-ex"
   },
   "engines": {
     "vscode": "^1.89.0"
@@ -19,28 +19,28 @@
   "contributes": {
     "commands": [
       {
-        "command": "stencil-ui.createUIDirectory",
+        "command": "eucalyptus.createUIDirectory",
         "title": "New UI Directory..."
       }
     ],
     "menus": {
       "explorer/context": [
         {
-          "command": "stencil-ui.createUIDirectory",
+          "command": "eucalyptus.createUIDirectory",
           "group": "navigation@8",
           "when": "explorerResourceIsFolder"
         }
       ]
     },
     "configuration": {
-      "title": "Stencil",
+      "title": "Eucalyptus",
       "properties": {
-        "stencil.useTypescript": {
+        "eucalyptus.useTypescript": {
           "type": "boolean",
           "default": true,
           "description": "Specify whether TypeScript should be used for UI component."
         },
-        "stencil.styleFormat": {
+        "eucalyptus.styleFormat": {
           "type": "string",
           "default": "css",
           "enum": [
@@ -50,7 +50,7 @@
           ],
           "description": "Specify the style format for UI component."
         },
-        "stencil.useCssModules": {
+        "eucalyptus.useCssModules": {
           "type": "boolean",
           "default": true,
           "description": "Specify whether to use CSS Modules for importing styles for UI component."
