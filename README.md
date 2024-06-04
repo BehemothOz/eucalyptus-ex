@@ -1,6 +1,6 @@
-# stencil-ui README
+# eucalyptus README
 
-This is the README for extension "stencil-ui".
+This is the README for extension "eucalyptus".
 
 ## Requirements
 

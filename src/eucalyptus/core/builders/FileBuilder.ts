@@ -1,7 +1,7 @@
 import { ComponentFile, StyleFile, IndexFile } from '../files';
 import { ImportType, ExportType } from '../modular';
 
-import type { StencilSettings } from '../configuration';
+import type { EucalyptusSettings } from '../configuration';
 import type { FileSignature } from '../files';
 import type { IFileBuilder } from './types';
 
@@ -23,7 +23,7 @@ export class FileBuilder implements IFileBuilder {
      */
     private _files: Map<FILES, FileSignature>;
 
-    constructor(private settings: StencilSettings) {
+    constructor(private settings: EucalyptusSettings) {
         this._files = new Map();
     }
 

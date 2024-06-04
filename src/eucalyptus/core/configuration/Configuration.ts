@@ -16,7 +16,7 @@ export interface Flags {
     useCssModules: boolean;
 }
 
-export interface StencilSettings {
+export interface EucalyptusSettings {
     /**
      * Gets the style file extension.
      */
@@ -31,7 +31,7 @@ export interface StencilSettings {
     getCssModulesUsedFlag: () => boolean;
 }
 
-export class Configuration implements StencilSettings {
+export class Configuration implements EucalyptusSettings {
     /**
      * Creates an instance of Configuration.
      * @param {vscode.WorkspaceConfiguration} settings - The workspace configuration.
