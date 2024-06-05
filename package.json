@@ -43,7 +43,7 @@
         },
         "eucalyptus.styleFormat": {
           "type": "string",
-          "default": "css",
+          "default": "scss",
           "enum": [
             "css",
             "scss",
