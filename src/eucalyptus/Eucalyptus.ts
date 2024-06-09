@@ -126,11 +126,14 @@ export class Eucalyptus {
      * @returns {Promise<void>}
      * @private
      */
-    private async createFiles(directoryUri: vscode.Uri, files: FileSignature[]): Promise<void[]> {
+    private async createFiles(directoryUri: vscode.Uri, files: FileSignature[]) {
+        const filesUri: Array<vscode.Uri> = [];
+
         const filesPromises = files.map(file => {
             const fileName = file.getFileNameWithExtension();
             const fileUri = fm.joinPath(directoryUri, fileName);
 
+            filesUri.push(fileUri);
             return fm.createFile(fileUri, file.getFileContent());
         });
 

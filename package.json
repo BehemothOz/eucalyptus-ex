@@ -3,7 +3,7 @@
   "displayName": "eucalyptus",
   "icon": "icon.png",
   "description": "Creating UI directories",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "WoodenHands",
   "repository": {
     "type": "git",
@@ -55,6 +55,11 @@
           "type": "boolean",
           "default": true,
           "description": "Specify whether to use CSS Modules for importing styles for UI component."
+        },
+        "eucalyptus.openAfterCreation": {
+          "type": "boolean",
+          "default": true,
+          "description": "Should the UI directory files be opened after creation or not."
         }
       }
     }

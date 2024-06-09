@@ -23,6 +23,10 @@ export function activate(context: vscode.ExtensionContext) {
 
         const vscodeConfiguration = vscode.workspace.getConfiguration('eucalyptus');
 
+        const editor = vscode.workspace.getConfiguration('editor');
+        console.log(editor);
+        console.log('tabSize', editor.get('tabSize'));
+
         const settings = new Configuration(vscodeConfiguration);
         const eucalyptus = new Eucalyptus(file, settings);
 
