@@ -3,7 +3,7 @@
   "displayName": "eucalyptus",
   "icon": "icon.png",
   "description": "Creating UI directories",
-  "version": "1.0.2",
+  "version": "1.1.2",
   "publisher": "WoodenHands",
   "repository": {
     "type": "git",
@@ -56,7 +56,7 @@
           "default": true,
           "description": "Specify whether to use CSS Modules for importing styles for UI component."
         },
-        "eucalyptus.openAfterCreation": {
+        "eucalyptus.shouldOpenAfterCreation": {
           "type": "boolean",
           "default": true,
           "description": "Should the UI directory files be opened after creation or not."
@@ -66,6 +66,7 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
+    "vscode:publish": "vsce publish",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",

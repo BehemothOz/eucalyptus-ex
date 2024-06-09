@@ -6,7 +6,7 @@ import { EucalyptusSettings } from './core/configuration';
 import { showInputField } from './core/ui';
 import { fm } from './core/FileManager';
 
-import type { FileSignature } from './core/files';
+import type { FileSignature, DirectoryFile } from './core/files';
 
 /**
  * Checks if a string contains spaces.
@@ -20,6 +20,7 @@ function hasSpaces(str: string): boolean {
 export class Eucalyptus {
     private file: vscode.Uri;
     private templates: ITemplatesManager;
+    private settings: EucalyptusSettings;
 
     private fileBuilder: IFileBuilder;
     private fileDirector: IFileDirector;
@@ -34,9 +35,13 @@ export class Eucalyptus {
          */
         this.templates = new TemplatesManager();
         /**
+         * Extension settings.
+         */
+        this.settings = settings;
+        /**
          * File build management.
          */
-        this.fileBuilder = new FileBuilder(settings);
+        this.fileBuilder = new FileBuilder(this.settings);
         /**
          * Extension of the FileBuilder.
          */
@@ -62,10 +67,24 @@ export class Eucalyptus {
             return;
         }
 
-        const directoryUri = await this.createDirectory(valueFromInputBox);
-        const files = await this.createFilesByTemplate(valueFromInputBox, selectedTemplate);
+        try {
+            const directoryUri = await this.createDirectory(valueFromInputBox);
+            const files = await this.createFilesByTemplate(valueFromInputBox, selectedTemplate);
 
-        await this.createFiles(directoryUri, files);
+            const directoryFiles = this.moveFilesToDirectory(directoryUri, files);
+
+            await this.createFiles(directoryFiles);
+
+            const shouldOpenAfterCreation = this.settings.getOpenAfterCreationFlag();
+
+            setTimeout(() => {
+                if (shouldOpenAfterCreation) {
+                    this.openFiles(directoryFiles);
+                }
+            });
+        } catch (error) {
+            console.error('error', error);
+        }
     }
 
     /**
@@ -126,15 +145,9 @@ export class Eucalyptus {
      * @returns {Promise<void>}
      * @private
      */
-    private async createFiles(directoryUri: vscode.Uri, files: FileSignature[]) {
-        const filesUri: Array<vscode.Uri> = [];
-
-        const filesPromises = files.map(file => {
-            const fileName = file.getFileNameWithExtension();
-            const fileUri = fm.joinPath(directoryUri, fileName);
-
-            filesUri.push(fileUri);
-            return fm.createFile(fileUri, file.getFileContent());
+    private async createFiles(directoryFiles: DirectoryFile[]): Promise<void[]> {
+        const filesPromises = directoryFiles.map(({ path, file }) => {
+            return fm.createFile(path, file.getFileContent());
         });
 
         return Promise.all(filesPromises);
@@ -144,12 +157,33 @@ export class Eucalyptus {
      * Creates files in a directory based on the specified template.
      * @param {string} name - The name of the directory.
      * @param {Template} template - The template to use for file creation.
-     * @returns {Promise<void>}
+     * @returns {Promise<FileSignature[]>}
      * @private
      */
     private async createFilesByTemplate(name: string, template: Template): Promise<FileSignature[]> {
         this.fileDirector.buildByTemplateKey(template.key, name);
 
         return this.fileBuilder.build();
+    }
+
+    private async openFiles(directoryFiles: DirectoryFile[]): Promise<vscode.TextEditor[]> {
+        const promises = directoryFiles.map(({ path }) => {
+            return vscode.window.showTextDocument(path, { preview: false });
+        });
+
+        return await Promise.all(promises);
+    }
+
+    private moveFilesToDirectory(directoryUri: vscode.Uri, files: FileSignature[]): DirectoryFile[] {
+        const directoryFiles: DirectoryFile[] = [];
+
+        for (const file of files) {
+            const fileName = file.getFileNameWithExtension();
+            const fileUri = fm.joinPath(directoryUri, fileName);
+
+            directoryFiles.push({ path: fileUri, file });
+        }
+
+        return directoryFiles;
     }
 }
