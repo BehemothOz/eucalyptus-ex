@@ -1,3 +1,4 @@
+import * as vscode from 'vscode';
 import { ModularSystemTransfer } from '../modular';
 
 export interface FileSignature {
@@ -17,6 +18,11 @@ export interface FileSignature {
      * Gets the content of the file.
      */
     getFileContent: () => string;
+}
+
+export interface DirectoryFile {
+    path: vscode.Uri;
+    file: FileSignature;
 }
 
 export abstract class File<Extension> extends ModularSystemTransfer implements FileSignature {

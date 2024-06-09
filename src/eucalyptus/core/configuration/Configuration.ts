@@ -29,6 +29,10 @@ export interface EucalyptusSettings {
      * Gets the flag indicating if CSS modules are used.
      */
     getCssModulesUsedFlag: () => boolean;
+    /**
+     * Gets the flag indicating whether to open the files of the created directory.
+     */
+    getOpenAfterCreationFlag: () => boolean;
 }
 
 export class Configuration implements EucalyptusSettings {
@@ -43,6 +47,13 @@ export class Configuration implements EucalyptusSettings {
      */
     getCssModulesUsedFlag(): boolean {
         return this.settings.get<boolean>('useCssModules') ?? false;
+    }
+
+    /**
+     * @returns {boolean} True if you need to open files of the created directory, otherwise false.
+     */
+    getOpenAfterCreationFlag(): boolean {
+        return this.settings.get<boolean>('shouldOpenAfterCreation') ?? false;
     }
 
     /**
