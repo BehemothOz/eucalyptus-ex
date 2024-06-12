@@ -12,16 +12,17 @@ const tag = (_s: TemplateStringsArray, imports: Array<string>, nameExp: string) 
 
     const content = `export const ${nameExp} = () => {
     return null;
-};
-    `;
+};`;
 
     if (header) {
         return `${header}
+
 ${content}
-    `;
+`;
     }
 
-    return `${content}`;
+    return `${content}
+`;
 };
 
 export class ComponentFile extends File<ComponentFileExtension> {

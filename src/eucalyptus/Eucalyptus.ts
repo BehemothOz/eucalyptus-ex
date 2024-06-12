@@ -17,6 +17,8 @@ function hasSpaces(str: string): boolean {
     return /\s/.test(str);
 }
 
+const wait = () => new Promise(resolve => setTimeout(resolve, 0));
+
 export class Eucalyptus {
     private file: vscode.Uri;
     private templates: ITemplatesManager;
@@ -70,6 +72,8 @@ export class Eucalyptus {
         try {
             const directoryUri = await this.createDirectory(valueFromInputBox);
             const files = await this.createFilesByTemplate(valueFromInputBox, selectedTemplate);
+
+            await wait();
 
             const directoryFiles = this.moveFilesToDirectory(directoryUri, files);
 
@@ -142,7 +146,7 @@ export class Eucalyptus {
     /**
      * Creates files in the specified directory.
      * @param {vscode.Uri} directoryUri - The URI of the directory.
-     * @returns {Promise<void>}
+     * @returns {Promise<void[]>}
      * @private
      */
     private async createFiles(directoryFiles: DirectoryFile[]): Promise<void[]> {

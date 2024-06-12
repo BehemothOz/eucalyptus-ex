@@ -4,7 +4,8 @@ import type { JavaScriptFileExtension } from '../configuration';
 const DEFAULT_INDEX_FILE_NAME = 'index';
 
 const tag = (_s: TemplateStringsArray, exports: Array<string>) => {
-    return exports.join('\n');
+    return `${exports.join('\n')}
+`;
 };
 
 export class IndexFile extends File<JavaScriptFileExtension> {
