@@ -17,4 +17,4 @@ This extension contributes the following settings:
 
 #### Settings
 `eucalyptus.settings.useTypescript` - specify whether TypeScript should be used for UI component.
-Default value is 5500.
+Default value is `true`.
