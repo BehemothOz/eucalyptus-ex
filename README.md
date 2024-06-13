@@ -18,3 +18,14 @@ This extension contributes the following settings:
 #### Settings
 `eucalyptus.settings.useTypescript` - specify whether TypeScript should be used for UI component.
 Default value is `true`.
+
+`eucalyptus.settings.styleFormat` - specify the style format for UI component.
+Default value is `scss`.
+Available Options : "css" "less"
+        
+`eucalyptus.settings.useCssModules` - specify whether to use CSS Modules for importing styles for UI component.
+Default value is `true`.
+        
+"eucalyptus.settings.shouldOpenAfterCreation" - should the UI directory files be opened after creation or not.
+Default value is `false`.
+          
