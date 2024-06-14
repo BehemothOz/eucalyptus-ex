@@ -29,3 +29,5 @@ Default value is `true`.
 `eucalyptus.settings.shouldOpenAfterCreation` - should the UI directory files be opened after creation or not.
 Default value is `false`.
           
+| Plugin | README |
+| ------ | ------ |
