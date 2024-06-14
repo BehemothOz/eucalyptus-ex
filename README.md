@@ -17,7 +17,7 @@ This extension contributes the following settings:
 
 #### Settings
 `eucalyptus.settings.useTypescript` - specify whether TypeScript should be used for UI component.  
-Default value is `true`.
+_Default value is `true`._
 
 `eucalyptus.settings.styleFormat` - specify the style format for UI component.  
 Default value is `scss`.
