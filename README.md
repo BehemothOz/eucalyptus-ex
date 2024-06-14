@@ -29,5 +29,6 @@ Default value is `true`.
 `eucalyptus.settings.shouldOpenAfterCreation` - should the UI directory files be opened after creation or not.
 Default value is `false`.
           
-| Property | Description | Default Value |
+| Key | Description | Default Value |
 | ------ | ------ | ------ |
+| `eucalyptus.settings.useTypescript` | specify whether TypeScript should be used for UI component | `true` |
