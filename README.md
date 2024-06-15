@@ -29,13 +29,11 @@ Default value is `true`.
 `eucalyptus.settings.shouldOpenAfterCreation` - should the UI directory files be opened after creation or not.
 Default value is `false`.
           
-| Key | Description | Default Value |
-| ------ | ------ | ------ |
-| `eucalyptus.settings.useTypescript` | specify whether TypeScript should be used for UI component | `true` |
-| ------ | ------ | ------ |
-| `eucalyptus.settings.styleFormat` | specify the style format for UI component. Available Options : "css" "less" | scss |
-| `eucalyptus.settings.useCssModules` | specify whether to use CSS Modules for importing styles for UI component. | `true` |
-| `eucalyptus.settings.shouldOpenAfterCreation` | should the UI directory files be opened after creation or not. | `false`. |
+| Key                                           | Description                                                                          | Default |
+| `eucalyptus.settings.shouldOpenAfterCreation` | Should the UI directory files be opened after creation or not                        | `false` |
+| `eucalyptus.settings.useTypescript`           | Specify whether TypeScript should be used for UI component                           | `true`  |
+| `eucalyptus.settings.useCssModules`           | Specify whether to use CSS Modules for importing styles for UI component             | `true`  |
+| `eucalyptus.settings.styleFormat`             | Specify the style format for UI component. Available options : `css`, `scss`, "less" | `scss`  |
 
 
 
