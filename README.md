@@ -16,26 +16,15 @@ This extension contributes the following settings:
 * `myExtension.thing`: Set to `blah` to do something.
 
 #### Settings
-`eucalyptus.settings.useTypescript` - specify whether TypeScript should be used for UI component.  
-_Default value is `true`._
+`eucalyptus.settings.useTypescript` - specify whether TypeScript should be used for UI component  
+_Default value is `true`_
 
-`eucalyptus.settings.styleFormat` - specify the style format for UI component.  
-Default value is `scss`.
-Available Options : "css" "less"
+`eucalyptus.settings.styleFormat` - specify the style format for UI component  
+_Available Options : `css`, `scss`, `less`_
+_Default value is `scss`_
         
-`eucalyptus.settings.useCssModules` - specify whether to use CSS Modules for importing styles for UI component.
-Default value is `true`.
+`eucalyptus.settings.useCssModules` - specify whether to use CSS Modules for importing styles for UI component  
+_Default value is `true`_
         
-`eucalyptus.settings.shouldOpenAfterCreation` - should the UI directory files be opened after creation or not.
-Default value is `false`.
-          
-| Key                                           | Description                                                                          | Default |
-|-----------------------------------------------|--------------------------------------------------------------------------------------|---------|
-| `eucalyptus.settings.shouldOpenAfterCreation` | Should the UI directory files be opened after creation or not                        | `false` |
-| `eucalyptus.settings.useTypescript`           | Specify whether TypeScript should be used for UI component                           | `true`  |
-| `eucalyptus.settings.useCssModules`           | Specify whether to use CSS Modules for importing styles for UI component             | `true`  |
-| `eucalyptus.settings.styleFormat`             | Specify the style format for UI component. Available options : `css`, `scss`, "less" | `scss`  |
-
-
-
-
+`eucalyptus.settings.shouldOpenAfterCreation` - should the UI directory files be opened after creation or not  
+_Default value is `false`._
