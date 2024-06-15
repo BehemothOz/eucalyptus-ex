@@ -20,7 +20,7 @@ This extension contributes the following settings:
 _Default value is `true`_
 
 `eucalyptus.settings.styleFormat` - specify the style format for UI component  
-_Available Options : `css`, `scss`, `less`_
+_Available Options : `css`, `scss`, `less`_  
 _Default value is `scss`_
         
 `eucalyptus.settings.useCssModules` - specify whether to use CSS Modules for importing styles for UI component  
