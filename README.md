@@ -15,7 +15,7 @@ This extension contributes the following settings:
 * `myExtension.enable`: Enable/disable this extension.
 * `myExtension.thing`: Set to `blah` to do something.
 
-#### Settings
+## Settings
 `eucalyptus.settings.useTypescript` - specify whether TypeScript should be used for UI component  
 _Default value is `true`_
 
