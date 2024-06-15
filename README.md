@@ -30,6 +30,7 @@ Default value is `true`.
 Default value is `false`.
           
 | Key                                           | Description                                                                          | Default |
+|-----------------------------------------------|--------------------------------------------------------------------------------------|---------|
 | `eucalyptus.settings.shouldOpenAfterCreation` | Should the UI directory files be opened after creation or not                        | `false` |
 | `eucalyptus.settings.useTypescript`           | Specify whether TypeScript should be used for UI component                           | `true`  |
 | `eucalyptus.settings.useCssModules`           | Specify whether to use CSS Modules for importing styles for UI component             | `true`  |
