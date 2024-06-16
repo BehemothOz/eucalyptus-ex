@@ -1,4 +1,4 @@
-# eucalyptus
+# Eucalyptus
 
 This is the README for extension "eucalyptus".
 
