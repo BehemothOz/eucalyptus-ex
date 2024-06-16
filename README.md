@@ -2,11 +2,14 @@
 
 This is the README for extension "eucalyptus".
 
+![Annotated code](images/preview.gif)
+
 ## Requirements
 
 If you have any requirements or dependencies, add a section describing those and how to install and configure them.
 
-## Settings
+## Configuration
+
 `eucalyptus.settings.useTypescript` - specify whether TypeScript should be used for UI component;  
 _Default: `true`_;
 
