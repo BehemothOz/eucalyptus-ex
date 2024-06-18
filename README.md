@@ -1,7 +1,5 @@
 # Eucalyptus
 
-This is the README for extension "eucalyptus".
-
 ![Annotated code](images/preview.gif)
 
 ## Requirements
