@@ -31,5 +31,5 @@ _Default: `false`_
 
 ## Installation
 
-Install the React Directory Creator extension from the Marketplace in VS Code.
-https://marketplace.visualstudio.com/items?itemName=WoodenHands.eucalyptus
+[Install](https://marketplace.visualstudio.com/items?itemName=WoodenHands.eucalyptus) the **Eucalyptus** extension from the Marketplace in VS Code.
+
