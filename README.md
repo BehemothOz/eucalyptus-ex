@@ -4,7 +4,9 @@
 
 ![Annotated code](images/preview.gif)
 
-Templates:
+## Templates
+When creating a directory, you will be asked to select one of the prepared templates
+
 Diamond Template
 Contains files: component, style, and index
 Ruby Template
