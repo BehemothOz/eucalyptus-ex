@@ -1,8 +1,8 @@
 # Eucalyptus
 
-![Annotated code](images/preview.gif)
+**Eucalyptus** is an extension for VS Code that helps you create UI directory with predefined templates for React applications.
 
-Eucalyptus is an extension for VS Code that helps you create UI directory with predefined templates for React applications. 
+![Annotated code](images/preview.gif)
 
 Templates:
 Diamond Template
@@ -13,14 +13,6 @@ Sapphire Template
 Contains files: component and style
 Emerald Template
 Contains files: style and index
-
-Installation:
-Install the React Directory Creator extension from the Marketplace in VS Code.
-https://marketplace.visualstudio.com/items?itemName=WoodenHands.eucalyptus
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
 
 ## Configuration
 
@@ -36,3 +28,8 @@ _Default: `true`_
         
 `eucalyptus.settings.shouldOpenAfterCreation` - should the UI directory files be opened after creation or not  
 _Default: `false`_
+
+## Installation
+
+Install the React Directory Creator extension from the Marketplace in VS Code.
+https://marketplace.visualstudio.com/items?itemName=WoodenHands.eucalyptus
