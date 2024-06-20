@@ -7,20 +7,17 @@
 ## Templates
 _When creating a directory, you will be asked to select one of the prepared templates_
 
-+ Diamond Template Contains files: component, style, and index
-Ruby Template
-Contains files: component and index
-Sapphire Template
-Contains files: component and style
-Emerald Template
-Contains files: style and index
++ **Diamond Template** (contains _component_, _style_ and _index_ files)
++ Ruby Template Contains files: component and index
++ Sapphire Template Contains files: component and style
++ Emerald Template Contains files: style and index
 
 ## Configuration
 
 `eucalyptus.settings.useTypescript` - specify whether TypeScript should be used for UI component  
 _Default: `true`_
 
-`eucalyptus.settings.styleFormat` - specify the style format for UI component;  
+`eucalyptus.settings.styleFormat` - specify the style format for UI component  
 _Available Options: `css`, `scss`, `less`_  
 _Default: `scss`_
         
