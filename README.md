@@ -7,12 +7,10 @@
 ## Templates
 _When creating a directory, you will be asked to select one of the prepared templates_
 
-+ **Diamond** Template (contains _component_, _style_ and _index_ files)
-+ **Ruby** Template (contains _component_ and _index_ files)
-+ Sapphire Template Contains files: component and style
-+ Emerald Template Contains files: style and index
-
-<span style="color:blue">some *blue* text</span>.
++ **Diamond** (contains _component_, _style_ and _index_ files)
++ **Ruby** (contains _component_ and _index_ files)
++ **Sapphire** (contains _component_ and _style_ files)
++ **Emerald** (contains _style_ and _index_ files)
 
 ## Configuration
 
