@@ -5,10 +5,9 @@
 ![Annotated code](images/preview.gif)
 
 ## Templates
-When creating a directory, you will be asked to select one of the prepared templates
+_When creating a directory, you will be asked to select one of the prepared templates_
 
-Diamond Template
-Contains files: component, style, and index
++ Diamond Template Contains files: component, style, and index
 Ruby Template
 Contains files: component and index
 Sapphire Template
