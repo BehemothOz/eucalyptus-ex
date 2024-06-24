@@ -11,7 +11,7 @@ const tag = (_s: TemplateStringsArray, imports: Array<string>, nameExp: string) 
     const header = imports.join(`\n`);
 
     const content = `export const ${nameExp} = () => {
-    return null;
+  return null;
 };`;
 
     if (header) {
