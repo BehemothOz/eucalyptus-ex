@@ -77,7 +77,7 @@ export class Eucalyptus {
 
             const directoryFiles = this.moveFilesToDirectory(directoryUri, files);
 
-            await this.createFiles(directoryFiles);
+            await this.createRealFiles(directoryFiles);
 
             const shouldOpenAfterCreation = this.settings.getOpenAfterCreationFlag();
 
@@ -145,11 +145,11 @@ export class Eucalyptus {
 
     /**
      * Creates files in the specified directory.
-     * @param {vscode.Uri} directoryUri - The URI of the directory.
+     * @param {DirectoryFile[]} directoryFiles - The URI of the directory.
      * @returns {Promise<void[]>}
      * @private
      */
-    private async createFiles(directoryFiles: DirectoryFile[]): Promise<void[]> {
+    private async createRealFiles(directoryFiles: DirectoryFile[]): Promise<void[]> {
         const filesPromises = directoryFiles.map(({ path, file }) => {
             return fm.createFile(path, file.getFileContent());
         });
@@ -170,6 +170,12 @@ export class Eucalyptus {
         return this.fileBuilder.build();
     }
 
+    /**
+     * Opens the created files in tabs.
+     * @param {DirectoryFile[]} directoryFiles - The list of files that are linked to the created directory.
+     * @returns {Promise<vscode.TextEditor[]>}
+     * @private
+     */
     private async openFiles(directoryFiles: DirectoryFile[]): Promise<vscode.TextEditor[]> {
         const promises = directoryFiles.map(({ path }) => {
             return vscode.window.showTextDocument(path, { preview: false });
@@ -178,6 +184,13 @@ export class Eucalyptus {
         return await Promise.all(promises);
     }
 
+    /**
+     * Moves files to the created directory.
+     * @param directoryUri - The URI of the directory.
+     * @param files - The list of files to be created.
+     * @returns {DirectoryFile[]}
+     * @private
+     */
     private moveFilesToDirectory(directoryUri: vscode.Uri, files: FileSignature[]): DirectoryFile[] {
         const directoryFiles: DirectoryFile[] = [];
 
