@@ -39,11 +39,16 @@ export class FileBuilder implements IFileBuilder {
 
     addComponentFile(fileName: string, componentName?: string) {
         const extension = this.settings.getJavaScriptFileExtension();
+        const useCssModules = this.settings.getCssModulesUsedFlag();
+
         const file = new ComponentFile(fileName, extension, { componentName });
 
         const styleFile = this._files.get(FILES.STYLE_FILE);
 
-        if (styleFile) {
+        /*
+            Handle other types of css imports
+        */
+        if (styleFile && useCssModules) {
             file.addImport({
                 type: ImportType.DEFAULT,
                 module: styleFile.getInternalName(),
