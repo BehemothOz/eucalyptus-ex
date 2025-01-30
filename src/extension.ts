@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 import { Eucalyptus } from './eucalyptus';
 import { Configuration } from './eucalyptus/core/configuration';
+import path from 'path';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -28,6 +29,42 @@ export function activate(context: vscode.ExtensionContext) {
 
         eucalyptus.initialization();
     });
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('eucalyptus.editUIDirectory', async (file: vscode.Uri) => {
+            if (!file) {
+                vscode.window.showErrorMessage('directory was not found');
+                return;
+            }
+
+            /*
+                TODO: validation new name
+                - It should not contain spaces
+                - It should not be empty
+                - It should not be equal to the previous name.
+                - Without spaces at the beginning and end
+            */
+
+            /*
+                1. Save information for rollback
+                2. Clear old information (success)
+                3. Rollback (error)
+            */
+
+            // const dirname = path.dirname(file.fsPath);
+            // const d_path = vscode.Uri.joinPath(vscode.Uri.file(dirname), 'Banana');
+
+            // await vscode.workspace.fs.rename(file, d_path);
+
+            /*
+                [name, FileType]
+                1 - File
+
+                (isFile is required)
+            */
+            // const files = await vscode.workspace.fs.readDirectory(file);
+        })
+    );
 
     context.subscriptions.push(disposable);
 }

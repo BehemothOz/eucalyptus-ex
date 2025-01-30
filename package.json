@@ -26,12 +26,21 @@
       {
         "command": "eucalyptus.createUIDirectory",
         "title": "New UI Directory... (eucalyptus)"
+      },
+      {
+        "command": "eucalyptus.editUIDirectory",
+        "title": "test (eucalyptus)"
       }
     ],
     "menus": {
       "explorer/context": [
         {
           "command": "eucalyptus.createUIDirectory",
+          "group": "navigation@8",
+          "when": "explorerResourceIsFolder"
+        },
+        {
+          "command": "eucalyptus.editUIDirectory",
           "group": "navigation@8",
           "when": "explorerResourceIsFolder"
         }
