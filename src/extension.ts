@@ -3,7 +3,8 @@
 import * as vscode from 'vscode';
 import { Eucalyptus } from './eucalyptus';
 import { Configuration } from './eucalyptus/core/configuration';
-import path from 'path';
+
+import * as fs from 'node:fs';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -36,6 +37,8 @@ export function activate(context: vscode.ExtensionContext) {
                 vscode.window.showErrorMessage('directory was not found');
                 return;
             }
+
+            // await readFileStream(vscode.Uri.joinPath(file, 'text.txt').fsPath);
 
             /*
                 TODO: validation new name
