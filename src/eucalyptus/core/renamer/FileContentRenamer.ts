@@ -87,7 +87,8 @@ export class FileContentRenamer extends StorageRenamer {
             }
         });
 
-        return await Promise.all(promises);
+        await Promise.all(promises);
+        return this;
     }
 
     private async writeFilesContent() {
@@ -106,7 +107,8 @@ export class FileContentRenamer extends StorageRenamer {
             }
         });
 
-        return await Promise.all(promises);
+        await Promise.all(promises);
+        return this;
     }
 
     private replace() {
@@ -120,6 +122,12 @@ export class FileContentRenamer extends StorageRenamer {
                 this.setEditorial(filePath, editorialContent);
             }
         });
+
+        return this;
+    }
+
+    async i() {
+        return this.readFilesContent().then(() => {});
     }
 
     rollback() {
@@ -128,9 +136,8 @@ export class FileContentRenamer extends StorageRenamer {
         */
         for (const filePath of this.filePaths) {
             try {
-                console.log("this.storage", this.storage);
+                console.log('this.storage', this.storage);
                 // await fs.writeFile(filePath, cache[filePath], 'utf8');
-                // console.log(`Файл ${filePath} восстановлен.`);
             } catch (rollbackErr) {
                 console.error(`Ошибка при восстановлении файла ${filePath}:`, rollbackErr);
             }
