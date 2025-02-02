@@ -47,6 +47,15 @@ export class FileManager implements IFileManager {
         return stat.type === vscode.FileType.Directory;
     }
 
+    async isFile(uri: vscode.Uri): Promise<boolean> {
+        const stat = await vscode.workspace.fs.stat(uri);
+        return stat.type === vscode.FileType.File;
+    }
+
+    async readDirectory(uri: vscode.Uri): Promise<[string, vscode.FileType][]> {
+        return await vscode.workspace.fs.readDirectory(uri);
+    }
+
     /**
      * @returns {Promise<void>} A promise that resolves when the directory is created.
      */
@@ -88,6 +97,10 @@ export class FileManager implements IFileManager {
         const uint8ArrayData = encoder.encode(content);
 
         await vscode.workspace.fs.writeFile(filePath, uint8ArrayData);
+    }
+
+    async rename() {
+        // await vscode.workspace.fs.rename(file, d_path);
     }
 }
 

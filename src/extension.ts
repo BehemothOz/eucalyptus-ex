@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import { Eucalyptus } from './eucalyptus';
 import { Configuration } from './eucalyptus/core/configuration';
 
-import * as fs from 'node:fs';
+import { EucalyptusRenamer } from './eucalyptus/EucalyptusRenamer';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -59,13 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
 
             // await vscode.workspace.fs.rename(file, d_path);
 
-            /*
-                [name, FileType]
-                1 - File
-
-                (isFile is required)
-            */
-            // const files = await vscode.workspace.fs.readDirectory(file);
+            await EucalyptusRenamer.rename(file);
         })
     );
 
