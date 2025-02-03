@@ -70,7 +70,7 @@ class StorageRenamer {
 }
 
 export class FileContentRenamer extends StorageRenamer {
-    constructor(private filePaths: Array<vscode.Uri>, private replacer: { from: string, to: string }) {
+    constructor(private filePaths: Array<vscode.Uri>, private replacer: { from: string; to: string }) {
         super(filePaths);
     }
 
@@ -126,11 +126,10 @@ export class FileContentRenamer extends StorageRenamer {
     async init() {
         try {
             await this.readFilesContent();
-            this.replace()
+            this.replace();
 
             await this.writeFilesContent();
-        }
-        catch (error) {
+        } catch (error) {
             console.log(error);
             this.rollback();
         }

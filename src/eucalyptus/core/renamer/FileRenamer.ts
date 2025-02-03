@@ -32,7 +32,10 @@ export class FileRenamer {
         this.files = this.analyzeFiles(candidateRenamableFiles);
         console.log('RenamableFiles', this.files);
 
-        this.fileContentRenamer = new FileContentRenamer(this.files.map((file) => file.location), replacer);
+        this.fileContentRenamer = new FileContentRenamer(
+            this.files.map((file) => file.location),
+            replacer
+        );
     }
 
     createPermissibleNamePattern(name: string) {
@@ -67,8 +70,14 @@ export class FileRenamer {
         return originalName.replace(this.pattern, this.replacer.to);
     }
 
-    renameDirectoryFiles() {
-        this.fileContentRenamer.init();
+    async renameDirectoryFiles() {
+        await this.fileContentRenamer.init();
+
+        const promises = this.files.map((file) => {
+            return fm.rename(file.location, file.newLocation);
+        });
+
+        Promise.all(promises);
         // const d_path = vscode.Uri.joinPath(vscode.Uri.file(dirname), 'Banana');
     }
 
