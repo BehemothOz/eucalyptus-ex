@@ -77,8 +77,7 @@ export class FileRenamer {
             return fm.rename(file.location, file.newLocation);
         });
 
-        Promise.all(promises);
-        // const d_path = vscode.Uri.joinPath(vscode.Uri.file(dirname), 'Banana');
+        await Promise.all(promises);
     }
 
     rollback() {}

@@ -18,7 +18,17 @@ export class EucalyptusRenamer {
             to: 'Banana',
         });
 
-        fileRenamer.renameDirectoryFiles();
+        try {
+            await fileRenamer.renameDirectoryFiles();
+
+            const target = vscode.Uri.file(path.dirname(this.directory.fsPath));
+            const a = fm.joinPath(target, 'Banana');
+
+            await fm.rename(this.directory, a);
+        } catch (error) {
+            // already exists at destination.
+            console.log(error);
+        }
     }
 
     async rename() {}
