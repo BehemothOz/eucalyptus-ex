@@ -69,11 +69,8 @@ class StorageRenamer {
     }
 }
 
-const searchPhrase = '';
-const replacement = '';
-
 export class FileContentRenamer extends StorageRenamer {
-    constructor(private filePaths: Array<vscode.Uri>) {
+    constructor(private filePaths: Array<vscode.Uri>, private replacer: { from: string, to: string }) {
         super(filePaths);
     }
 
@@ -112,13 +109,13 @@ export class FileContentRenamer extends StorageRenamer {
     }
 
     private replace() {
-        const regExp = new RegExp(searchPhrase, 'g');
+        const regExp = new RegExp(this.replacer.from, 'g');
 
         this.filePaths.forEach((filePath) => {
             const originalContent = this.getOriginal(filePath);
 
             if (originalContent) {
-                const editorialContent = originalContent.replace(regExp, replacement);
+                const editorialContent = originalContent.replace(regExp, this.replacer.to);
                 this.setEditorial(filePath, editorialContent);
             }
         });
@@ -126,8 +123,17 @@ export class FileContentRenamer extends StorageRenamer {
         return this;
     }
 
-    async i() {
-        return this.readFilesContent().then(() => {});
+    async init() {
+        try {
+            await this.readFilesContent();
+            this.replace()
+
+            await this.writeFilesContent();
+        }
+        catch (error) {
+            console.log(error);
+            this.rollback();
+        }
     }
 
     rollback() {

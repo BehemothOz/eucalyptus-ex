@@ -59,7 +59,8 @@ export function activate(context: vscode.ExtensionContext) {
 
             // await vscode.workspace.fs.rename(file, d_path);
 
-            await EucalyptusRenamer.rename(file);
+            const eucalyptusRenamer = new EucalyptusRenamer(file);
+            eucalyptusRenamer.initialize();
         })
     );
 

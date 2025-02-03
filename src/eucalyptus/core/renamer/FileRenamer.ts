@@ -1,43 +1,76 @@
 import * as vscode from 'vscode';
 
+import { FileContentRenamer } from './FileContentRenamer';
 import { fm } from '../FileManager';
 
-interface PreparatoryFile {
+export interface CandidateRenamableFile {
+    directory: vscode.Uri;
     originalName: string;
-    path: vscode.Uri;
+    location: vscode.Uri;
+}
+
+interface RenamableFile extends CandidateRenamableFile {
+    newLocation: vscode.Uri;
+}
+
+export interface Replacer {
+    from: string;
+    to: string;
 }
 
 export class FileRenamer {
+    pattern: RegExp;
     permissibleNames = [/\bindex\b/i];
 
-    files: Array<PreparatoryFile> = [];
+    files: Array<RenamableFile>;
+    fileContentRenamer: FileContentRenamer;
 
-    addPermissibleName(name: string) {
-        const regexp = new RegExp(`\\b${name}\\b`, 'i');
-        this.permissibleNames.push(regexp);
+    constructor(candidateRenamableFiles: Array<CandidateRenamableFile>, private replacer: Replacer) {
+        this.pattern = this.createPermissibleNamePattern(replacer.from);
+        this.permissibleNames.push(this.pattern);
+
+        this.files = this.analyzeFiles(candidateRenamableFiles);
+        console.log('RenamableFiles', this.files);
+
+        this.fileContentRenamer = new FileContentRenamer(this.files.map((file) => file.location), replacer);
     }
 
-    async analyzeDirectoryFiles(directory: vscode.Uri, dirname: string) {
-        this.addPermissibleName(dirname);
-        const files = await fm.readDirectory(directory);
+    createPermissibleNamePattern(name: string) {
+        return new RegExp(`\\b${name}\\b`, 'i');
+    }
 
-        for (const [fileName, fileType] of files) {
-            if (fileType !== vscode.FileType.File) {
-                continue;
-            }
+    analyzeFiles(files: Array<CandidateRenamableFile>) {
+        const renamableFiles = [];
 
-            const hasMatch = this.permissibleNames.some((p) => p.test(fileName));
+        for (const file of files) {
+            const isMatch = this.permissibleNames.some((name) => name.test(file.originalName));
 
-            if (hasMatch) {
-                this.files.push({
-                    originalName: fileName,
-                    path: fm.joinPath(directory, fileName),
-                });
+            if (isMatch) {
+                const renamed = this.renameFile(file.originalName);
+                const location = fm.joinPath(file.directory, renamed);
+
+                const renamableFile: RenamableFile = Object.assign(
+                    {
+                        newLocation: location,
+                    },
+                    file
+                );
+
+                renamableFiles.push(renamableFile);
             }
         }
+
+        return renamableFiles;
     }
 
-    renameDirectoryFiles() {}
+    renameFile(originalName: string) {
+        return originalName.replace(this.pattern, this.replacer.to);
+    }
+
+    renameDirectoryFiles() {
+        this.fileContentRenamer.init();
+        // const d_path = vscode.Uri.joinPath(vscode.Uri.file(dirname), 'Banana');
+    }
 
     rollback() {}
 }
