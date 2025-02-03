@@ -99,8 +99,8 @@ export class FileManager implements IFileManager {
         await vscode.workspace.fs.writeFile(filePath, uint8ArrayData);
     }
 
-    async rename() {
-        // await vscode.workspace.fs.rename(file, d_path);
+    async rename(source: vscode.Uri, target: vscode.Uri) {
+        await vscode.workspace.fs.rename(source, target, { overwrite: false });
     }
 }
 
