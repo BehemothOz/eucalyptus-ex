@@ -81,15 +81,16 @@ export class FileContentRenamer extends FileStorage {
      *
      * @throws Will throw an error if any step in the pipeline fails.
      */
-    public async execute() {
-        try {
-            await this.read();
-            await this.replace();
+    public async execute(): Promise<void> {
+        const steps = [this.read, this.replace, this.write];
 
-            await this.write();
+        try {
+            for (const step of steps) {
+                await step.call(this);
+            }
         } catch (error) {
-            this.rollback();
-            throw new Error();
+            await this.rollback();
+            // throw new Error(`Execution failed: ${error.message}`);
         }
     }
 
@@ -97,7 +98,7 @@ export class FileContentRenamer extends FileStorage {
      * Rolls back changes by restoring the original content of files.
      * This method is called if an error occurs during the execution of the pipeline.
      */
-    rollback() {
+    async rollback() {
         for (const filePath of this.filePaths) {
             try {
                 console.log('this.storage', this.storage);
