@@ -1,95 +1,46 @@
 import vscode from 'vscode';
+
+import { FileStorage } from './FileStorage';
 import { fm } from '../FileManager';
 
-type FilePath = vscode.Uri;
-
-type FileStorageItem = {
-    original: string | null;
-    editorial: string | null;
-    isModified: boolean;
-};
-
-class StorageRenamer {
-    storage: Map<FilePath, FileStorageItem> = new Map();
-
-    constructor(filePaths: Array<FilePath>) {
-        filePaths.forEach((filePath) => {
-            const defaultStorageItem: FileStorageItem = {
-                original: null,
-                editorial: null,
-                isModified: false,
-            };
-
-            this.storage.set(filePath, defaultStorageItem);
-        });
-    }
-
-    protected getOriginal(filePath: FilePath) {
-        const storageItem = this.storage.get(filePath);
-
-        if (storageItem && storageItem.original) {
-            return storageItem.original;
-        }
-
-        return null;
-    }
-
-    protected setOriginal(filePath: FilePath, originalContent: string) {
-        const storageItem = this.storage.get(filePath);
-
-        if (storageItem) {
-            storageItem.original = originalContent;
-        }
-    }
-
-    protected getEditorial(filePath: FilePath) {
-        const storageItem = this.storage.get(filePath);
-
-        if (storageItem && storageItem.editorial) {
-            return storageItem.editorial;
-        }
-
-        return null;
-    }
-
-    protected setEditorial(filePath: FilePath, editorialContent: string) {
-        const storageItem = this.storage.get(filePath);
-
-        if (storageItem) {
-            storageItem.editorial = editorialContent;
-        }
-    }
-
-    protected setModifiedStatus(filePath: FilePath) {
-        const storageItem = this.storage.get(filePath);
-
-        if (storageItem) {
-            storageItem.isModified = true;
-        }
-    }
-}
-
-export class FileContentRenamer extends StorageRenamer {
+/**
+ * A class to manage the process of reading, replacing, and writing file contents.
+ * Extends the `FileStorage` class to leverage its storage capabilities.
+ */
+export class FileContentRenamer extends FileStorage {
+    /**
+     * Creates an instance of FileContentRenamer.
+     *
+     * @param filePaths - An array of file paths (as `vscode.Uri`) to process.
+     * @param replacer - An object containing the string to replace (`from`) and the replacement string (`to`).
+     */
     constructor(private filePaths: Array<vscode.Uri>, private replacer: { from: string; to: string }) {
         super(filePaths);
     }
 
-    private async readFilesContent() {
-        const promises = this.filePaths.map(async (filePath) => {
+    /**
+     * Reads the content of all files specified in `filePaths` and stores it in the storage.
+     * If any file fails to read, an error is thrown.
+     */
+    private async read() {
+        const readingTasks = this.filePaths.map(async (filePath) => {
             try {
                 const fileContent = await fm.readFile(filePath);
                 this.setOriginal(filePath, fileContent);
             } catch (error) {
-                console.log('Read File Content Error', error);
+                throw new Error('File reading error');
             }
         });
 
-        await Promise.all(promises);
-        return this;
+        await Promise.all(readingTasks);
     }
 
-    private async writeFilesContent() {
-        const promises = this.filePaths.map(async (filePath) => {
+    /**
+     * Writes the modified content of all files back to their respective paths.
+     * If any file fails to write, an error is thrown.
+     */
+    private async write() {
+        const writingTasks = this.filePaths.map(async (filePath) => {
             const editorialContent = this.getEditorial(filePath);
 
             if (editorialContent === null) {
@@ -100,15 +51,18 @@ export class FileContentRenamer extends StorageRenamer {
                 await fm.writeFile(filePath, editorialContent);
                 this.setModifiedStatus(filePath);
             } catch (error) {
-                console.log('Read File Content Error', error);
+                throw new Error('File writing error');
             }
         });
 
-        await Promise.all(promises);
-        return this;
+        await Promise.all(writingTasks);
     }
 
-    private replace() {
+    /**
+     * Replaces occurrences of the `from` string with the `to` string in the original content of each file.
+     * The modified content is stored in the `editorial` field of the storage.
+     */
+    private async replace() {
         const regExp = new RegExp(this.replacer.from, 'g');
 
         this.filePaths.forEach((filePath) => {
@@ -119,26 +73,31 @@ export class FileContentRenamer extends StorageRenamer {
                 this.setEditorial(filePath, editorialContent);
             }
         });
-
-        return this;
     }
 
-    async init() {
+    /**
+     * Executes the entire pipeline: reads file contents, replaces strings, and writes the modified content back to the files.
+     * If any step fails, the process is rolled back to restore the original state.
+     *
+     * @throws Will throw an error if any step in the pipeline fails.
+     */
+    public async execute() {
         try {
-            await this.readFilesContent();
-            this.replace();
+            await this.read();
+            await this.replace();
 
-            await this.writeFilesContent();
+            await this.write();
         } catch (error) {
-            console.log(error);
             this.rollback();
+            throw new Error();
         }
     }
 
+    /**
+     * Rolls back changes by restoring the original content of files.
+     * This method is called if an error occurs during the execution of the pipeline.
+     */
     rollback() {
-        /*
-            catch block
-        */
         for (const filePath of this.filePaths) {
             try {
                 console.log('this.storage', this.storage);
@@ -149,7 +108,9 @@ export class FileContentRenamer extends StorageRenamer {
         }
     }
 
-    clear() {
-        // this.cache.clear();
-    }
+    /**
+     * Clears the storage.
+     * Currently, this method is not implemented.
+     */
+    clear() {}
 }
