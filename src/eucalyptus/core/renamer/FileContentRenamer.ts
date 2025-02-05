@@ -115,3 +115,15 @@ export class FileContentRenamer extends FileStorage {
      */
     clear() {}
 }
+
+class FileContentError extends Error {
+    public operation: 'read' | 'write' | 'restore';
+    public fileName: string;
+
+    constructor(operation: 'read' | 'write', fileName: string, message: string) {
+        super(`File Content Error (${operation.toUpperCase()}): ${message}`);
+        this.name = 'FileContentError';
+        this.operation = operation;
+        this.fileName = fileName;
+    }
+}
