@@ -2,24 +2,43 @@ import * as vscode from 'vscode';
 import * as path from 'node:path';
 
 import { showInputField } from './core/ui';
-import { FileRenamer, type CandidateRenamableFile } from './core/renamer/FileRenamer';
+import { FileRenamer, Replacement, type CandidateRenamableFile } from './core/renamer/FileRenamer';
 import { fm } from './core/FileManager';
 import { hasSpaces } from './Eucalyptus';
+import { createReplacement } from './core/utils/replacement';
 
+/**
+ * A class responsible for renaming a directory and its associated files.
+ */
 export class EucalyptusRenamer {
+    /**
+     * The parent directory of the current directory being renamed.
+     */
+    root: vscode.Uri;
+    /**
+     * The name of the directory to be renamed.
+     */
     directoryName: string;
+
+    replacement!: Replacement;
+    candidateRenamableFiles!: CandidateRenamableFile[];
+
     isInitialized: boolean = false;
 
     constructor(private directory: vscode.Uri) {
         this.directoryName = path.basename(this.directory.fsPath);
+        this.root = vscode.Uri.file(path.dirname(this.directory.fsPath));
     }
 
     async initialize() {
-        const candidateRenamableFiles = await this.getDirectoryFiles();
-        const fileRenamer = new FileRenamer(candidateRenamableFiles, {
-            from: this.directoryName,
-            to: 'Banana',
-        });
+        const newDirectoryName = await this.showInput();
+
+        if (newDirectoryName === null) {
+            return undefined;
+        }
+
+        this.candidateRenamableFiles = await this.getDirectoryFiles();
+        this.replacement = createReplacement(this.directoryName, newDirectoryName);
 
         this.isInitialized = true;
     }
@@ -29,12 +48,14 @@ export class EucalyptusRenamer {
             throw new Error('');
         }
 
-        // try {
-        //     await fileRenamer.renameDirectoryFiles();
-        // } catch (error) {
-        //     already exists at destination.
-        //     console.log(error);
-        // }
+        try {
+            const fileRenamer = new FileRenamer(this.candidateRenamableFiles, this.replacement);
+
+            await fileRenamer.execute();
+            await this.renameDirectory();
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     /**
@@ -43,7 +64,10 @@ export class EucalyptusRenamer {
      * @private
      */
     private async showInput(): Promise<string | null> {
-        const join = (value: string) => fm.joinPath(this.file, value);
+        const join = (value: string) => {
+            const target = vscode.Uri.file(path.dirname(this.directory.fsPath));
+            return fm.joinPath(target, value);
+        };
 
         return await showInputField({
             placeholder: 'New directory',
@@ -63,12 +87,6 @@ export class EucalyptusRenamer {
         });
     }
 
-    async renameDirectory() {
-        const target = vscode.Uri.file(path.dirname(this.directory.fsPath));
-        const a = fm.joinPath(target, 'Banana');
-        await fm.rename(this.directory, a);
-    }
-
     private async getDirectoryFiles() {
         const files = await fm.readDirectory(this.directory);
         const candidates: Array<CandidateRenamableFile> = [];
@@ -86,5 +104,9 @@ export class EucalyptusRenamer {
         }
 
         return candidates;
+    }
+
+    private async renameDirectory() {
+        await fm.rename(this.directory, fm.joinPath(this.root, this.replacement.to));
     }
 }
