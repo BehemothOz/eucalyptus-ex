@@ -19,18 +19,34 @@ export class EucalyptusRenamer {
      * The name of the directory to be renamed.
      */
     directoryName: string;
-
+    /**
+     * The replacement object that defines how names should be transformed.
+     */
     replacement!: Replacement;
+    /**
+     * A list of candidate files within the directory that can be renamed.
+     */
     candidateRenamableFiles!: CandidateRenamableFile[];
-
+    /**
+     * A flag indicating whether the renamer has been initialized.
+     */
     isInitialized: boolean = false;
 
+    /**
+     * Creates an instance of EucalyptusRenamer.
+     * @param directory - The URI of the directory to be renamed.
+     */
     constructor(private directory: vscode.Uri) {
         this.directoryName = path.basename(this.directory.fsPath);
         this.root = vscode.Uri.file(path.dirname(this.directory.fsPath));
     }
 
-    async initialize() {
+    /**
+     * Initializes the renamer by prompting the user for a new directory name,
+     * validating the input, and preparing the replacement logic.
+     * @returns {Promise<void>} A promise that resolves when initialization is complete.
+     */
+    async initialize(): Promise<void> {
         const newDirectoryName = await this.showInput();
 
         if (newDirectoryName === null) {
@@ -43,7 +59,11 @@ export class EucalyptusRenamer {
         this.isInitialized = true;
     }
 
-    async execute() {
+    /**
+     * Executes the renaming process for both the directory and its files.
+     * @returns {Promise<void>} A promise that resolves when the renaming is complete.
+     */
+    async execute(): Promise<void> {
         if (!this.isInitialized) {
             throw new Error('');
         }
@@ -87,7 +107,12 @@ export class EucalyptusRenamer {
         });
     }
 
-    private async getDirectoryFiles() {
+    /**
+     * Retrieves all files within the directory and prepares them for renaming.
+     * @returns {Promise<CandidateRenamableFile[]>} A promise that resolves with the list of candidate files.
+     * @private
+     */
+    private async getDirectoryFiles(): Promise<CandidateRenamableFile[]> {
         const files = await fm.readDirectory(this.directory);
         const candidates: Array<CandidateRenamableFile> = [];
 
@@ -106,6 +131,11 @@ export class EucalyptusRenamer {
         return candidates;
     }
 
+    /**
+     * Renames the directory itself using the provided replacement logic.
+     * @returns {Promise<void>} A promise that resolves when the directory is renamed.
+     * @private
+     */
     private async renameDirectory() {
         await fm.rename(this.directory, fm.joinPath(this.root, this.replacement.to));
     }
