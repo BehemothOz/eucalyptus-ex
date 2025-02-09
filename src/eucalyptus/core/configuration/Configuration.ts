@@ -43,6 +43,13 @@ export class Configuration implements EucalyptusSettings {
     constructor(private settings: vscode.WorkspaceConfiguration) {}
 
     /**
+     * @returns {boolean} True if the rename command is enabled, false otherwise.
+     */
+    getEnableRenameCommandFlag(): boolean {
+        return this.settings.get<boolean>('enableRenameUIDirectoryCommand') ?? false;
+    }
+
+    /**
      * @returns {boolean} True if CSS modules are used, false otherwise.
      */
     getCssModulesUsedFlag(): boolean {

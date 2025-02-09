@@ -49,11 +49,6 @@
     "configuration": {
       "title": "Eucalyptus",
       "properties": {
-        "eucalyptus.enableRenameUIDirectoryCommand": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable or disable the Rename UI Directory command"
-        },
         "eucalyptus.useTypescript": {
           "type": "boolean",
           "default": true,
@@ -78,6 +73,11 @@
           "type": "boolean",
           "default": false,
           "description": "Should the UI directory files be opened after creation or not."
+        },
+        "eucalyptus.enableRenameUIDirectoryCommand": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable or disable the Rename UI Directory command"
         }
       }
     }
