@@ -75,6 +75,7 @@ export class EucalyptusRenamer {
             await this.renameDirectory();
         } catch (error) {
             console.log(error);
+            vscode.window.showErrorMessage('unexpected error');
         }
     }
 

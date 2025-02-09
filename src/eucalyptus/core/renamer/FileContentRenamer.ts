@@ -90,7 +90,7 @@ export class FileContentRenamer extends FileStorage {
             }
         } catch (error) {
             await this.rollback();
-            // throw new Error(`Execution failed: ${error.message}`);
+            throw new Error(`[FileContentRenamer] Execution failed`);
         }
     }
 
@@ -99,13 +99,23 @@ export class FileContentRenamer extends FileStorage {
      * This method is called if an error occurs during the execution of the pipeline.
      */
     async rollback() {
-        for (const filePath of this.filePaths) {
-            try {
-                console.log('this.storage', this.storage);
-                // await fs.writeFile(filePath, cache[filePath], 'utf8');
-            } catch (rollbackErr) {
-                console.error(`Ошибка при восстановлении файла ${filePath}:`, rollbackErr);
+        const tasks = this.filePaths.map((filePath) => {
+            /*
+                TODO: fix. Storage is private field.
+            */
+            const storageItem = this.storage.get(filePath);
+
+            if (storageItem && storageItem.original && storageItem.isModified) {
+                return fm.writeFile(filePath, storageItem.original);
             }
+
+            return null;
+        });
+
+        try {
+            await Promise.all(tasks);
+        } catch (rollbackErr) {
+            console.error(`Recovery error:`, rollbackErr);
         }
     }
 

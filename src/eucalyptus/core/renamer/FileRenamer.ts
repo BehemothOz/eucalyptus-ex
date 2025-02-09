@@ -85,13 +85,17 @@ export class FileRenamer {
      * First, updates the content of the files, then renames the files themselves.
      */
     async execute() {
-        await this.fileContentRenamer.execute();
+        try {
+            await this.fileContentRenamer.execute();
 
-        const renamingFileTasks = this.files.map((file) => {
-            return fm.rename(file.location, file.newLocation);
-        });
+            const renamingFileTasks = this.files.map((file) => {
+                return fm.rename(file.location, file.newLocation);
+            });
 
-        await Promise.all(renamingFileTasks);
+            await Promise.all(renamingFileTasks);
+        } catch {
+            await this.fileContentRenamer.rollback();
+        }
     }
 
     /**

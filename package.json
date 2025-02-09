@@ -41,7 +41,7 @@
         },
         {
           "command": "eucalyptus.renameUIDirectory",
-          "group": "navigation@8",
+          "group": "7_modification",
           "when": "explorerResourceIsFolder && config.eucalyptus.enableRenameUIDirectoryCommand"
         }
       ]
