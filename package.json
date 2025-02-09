@@ -28,8 +28,8 @@
         "title": "New UI Directory... (eucalyptus)"
       },
       {
-        "command": "eucalyptus.editUIDirectory",
-        "title": "test (eucalyptus)"
+        "command": "eucalyptus.renameUIDirectory",
+        "title": "Rename UI Directory... (eucalyptus)"
       }
     ],
     "menus": {
@@ -40,15 +40,20 @@
           "when": "explorerResourceIsFolder"
         },
         {
-          "command": "eucalyptus.editUIDirectory",
+          "command": "eucalyptus.renameUIDirectory",
           "group": "navigation@8",
-          "when": "explorerResourceIsFolder"
+          "when": "explorerResourceIsFolder && config.eucalyptus.enableRenameUIDirectoryCommand"
         }
       ]
     },
     "configuration": {
       "title": "Eucalyptus",
       "properties": {
+        "eucalyptus.enableRenameUIDirectoryCommand": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable or disable the Rename UI Directory command"
+        },
         "eucalyptus.useTypescript": {
           "type": "boolean",
           "default": true,
