@@ -47,6 +47,15 @@ export class FileManager implements IFileManager {
         return stat.type === vscode.FileType.Directory;
     }
 
+    async isFile(uri: vscode.Uri): Promise<boolean> {
+        const stat = await vscode.workspace.fs.stat(uri);
+        return stat.type === vscode.FileType.File;
+    }
+
+    async readDirectory(uri: vscode.Uri): Promise<[string, vscode.FileType][]> {
+        return await vscode.workspace.fs.readDirectory(uri);
+    }
+
     /**
      * @returns {Promise<void>} A promise that resolves when the directory is created.
      */
@@ -59,6 +68,39 @@ export class FileManager implements IFileManager {
      */
     async createFile(fileUri: vscode.Uri, content: string): Promise<void> {
         return await vscode.workspace.fs.writeFile(fileUri, Buffer.from(content));
+    }
+
+    /**
+     * Reads the contents of a file asynchronously and returns the decoded content as a string.
+     *
+     * @async
+     * @param {vscode.Uri} filePath - The URI of the file to read.
+     * @returns {Promise<string>} - The decoded contents of the file.
+     * @throws {Error} - If an error occurs while reading the file or decoding the contents.
+     */
+    async readFile(filePath: vscode.Uri): Promise<string> {
+        /*
+            Node: fs.readFile(packageJsonPath, 'utf-8')
+        */
+        const textDecoder = new TextDecoder('utf-8');
+
+        const uint8ArrayData = await vscode.workspace.fs.readFile(filePath);
+        const fileContent = textDecoder.decode(uint8ArrayData);
+
+        return fileContent;
+
+        // TODO: throw new Error(`Error reading file: ${filePath}\n${error}`);
+    }
+
+    async writeFile(filePath: vscode.Uri, content: string) {
+        const encoder = new TextEncoder();
+        const uint8ArrayData = encoder.encode(content);
+
+        await vscode.workspace.fs.writeFile(filePath, uint8ArrayData);
+    }
+
+    async rename(source: vscode.Uri, target: vscode.Uri) {
+        await vscode.workspace.fs.rename(source, target, { overwrite: false });
     }
 }
 

@@ -13,7 +13,7 @@ import type { FileSignature, DirectoryFile } from './core/files';
  * @param {string} str - The string to check.
  * @returns {boolean} True if the string contains spaces, false otherwise.
  */
-function hasSpaces(str: string): boolean {
+export function hasSpaces(str: string): boolean {
     return /\s/.test(str);
 }
 

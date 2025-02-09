@@ -26,6 +26,10 @@
       {
         "command": "eucalyptus.createUIDirectory",
         "title": "New UI Directory... (eucalyptus)"
+      },
+      {
+        "command": "eucalyptus.renameUIDirectory",
+        "title": "Rename UI Directory... (eucalyptus)"
       }
     ],
     "menus": {
@@ -34,6 +38,11 @@
           "command": "eucalyptus.createUIDirectory",
           "group": "navigation@8",
           "when": "explorerResourceIsFolder"
+        },
+        {
+          "command": "eucalyptus.renameUIDirectory",
+          "group": "7_modification",
+          "when": "explorerResourceIsFolder && config.eucalyptus.enableRenameUIDirectoryCommand"
         }
       ]
     },
@@ -64,6 +73,11 @@
           "type": "boolean",
           "default": false,
           "description": "Should the UI directory files be opened after creation or not."
+        },
+        "eucalyptus.enableRenameUIDirectoryCommand": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable or disable the Rename UI Directory command"
         }
       }
     }
