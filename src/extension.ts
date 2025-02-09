@@ -33,19 +33,11 @@ export function activate(context: vscode.ExtensionContext) {
 
     if (isEnabledRenameCommand) {
         context.subscriptions.push(
-            vscode.commands.registerCommand('eucalyptus.editUIDirectory', async (file: vscode.Uri) => {
+            vscode.commands.registerCommand('eucalyptus.renameUIDirectory', async (file: vscode.Uri) => {
                 if (!file) {
                     vscode.window.showErrorMessage('directory was not found');
                     return;
                 }
-
-                /*
-                    TODO: validation new name
-                    - It should not contain spaces
-                    - It should not be empty
-                    - It should not be equal to the previous name.
-                    - Without spaces at the beginning and end
-                */
 
                 const eucalyptusRenamer = new EucalyptusRenamer(file);
                 await eucalyptusRenamer.initialize();

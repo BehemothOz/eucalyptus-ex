@@ -85,8 +85,7 @@ export class EucalyptusRenamer {
      */
     private async showInput(): Promise<string | null> {
         const join = (value: string) => {
-            const target = vscode.Uri.file(path.dirname(this.directory.fsPath));
-            return fm.joinPath(target, value);
+            return fm.joinPath(this.root, value);
         };
 
         return await showInputField({
@@ -94,12 +93,14 @@ export class EucalyptusRenamer {
             prompt: 'Enter the name of the directory',
             valueSelection: [-1, -1],
             validateAccept(value) {
-                if (hasSpaces(value)) {
+                const enteredValue = value.trim();
+
+                if (hasSpaces(enteredValue)) {
                     return 'The name cannot contain spaces';
                 }
 
-                if (fm.exist(join(value))) {
-                    return `A folder ${value} already exists at this location`;
+                if (fm.exist(join(enteredValue))) {
+                    return `A folder ${enteredValue} already exists at this location`;
                 }
 
                 return null;
@@ -136,7 +137,7 @@ export class EucalyptusRenamer {
      * @returns {Promise<void>} A promise that resolves when the directory is renamed.
      * @private
      */
-    private async renameDirectory() {
+    private async renameDirectory(): Promise<void> {
         await fm.rename(this.directory, fm.joinPath(this.root, this.replacement.to));
     }
 }
