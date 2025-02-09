@@ -13,57 +13,46 @@ export function activate(context: vscode.ExtensionContext) {
     // This line of code will only be executed once when your extension is activated
     console.log('Congratulations, your extension "eucalyptus" is now active!');
 
+    const vscodeConfiguration = vscode.workspace.getConfiguration('eucalyptus');
+    const settings = new Configuration(vscodeConfiguration);
+
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with registerCommand
     // The commandId parameter must match the command field in package.json
-    // let disposable =
     const disposable = vscode.commands.registerCommand('eucalyptus.createUIDirectory', async (file: vscode.Uri) => {
         if (!file) {
             vscode.window.showErrorMessage('directory was not found');
             return;
         }
 
-        const vscodeConfiguration = vscode.workspace.getConfiguration('eucalyptus');
-
-        const settings = new Configuration(vscodeConfiguration);
         const eucalyptus = new Eucalyptus(file, settings);
-
         eucalyptus.initialization();
     });
 
-    context.subscriptions.push(
-        vscode.commands.registerCommand('eucalyptus.editUIDirectory', async (file: vscode.Uri) => {
-            if (!file) {
-                vscode.window.showErrorMessage('directory was not found');
-                return;
-            }
+    const isEnabledRenameCommand = settings.getEnableRenameCommandFlag();
 
-            // await readFileStream(vscode.Uri.joinPath(file, 'text.txt').fsPath);
+    if (isEnabledRenameCommand) {
+        context.subscriptions.push(
+            vscode.commands.registerCommand('eucalyptus.editUIDirectory', async (file: vscode.Uri) => {
+                if (!file) {
+                    vscode.window.showErrorMessage('directory was not found');
+                    return;
+                }
 
-            /*
-                TODO: validation new name
-                - It should not contain spaces
-                - It should not be empty
-                - It should not be equal to the previous name.
-                - Without spaces at the beginning and end
-            */
+                /*
+                    TODO: validation new name
+                    - It should not contain spaces
+                    - It should not be empty
+                    - It should not be equal to the previous name.
+                    - Without spaces at the beginning and end
+                */
 
-            /*
-                1. Save information for rollback
-                2. Clear old information (success)
-                3. Rollback (error)
-            */
-
-            // const dirname = path.dirname(file.fsPath);
-            // const d_path = vscode.Uri.joinPath(vscode.Uri.file(dirname), 'Banana');
-
-            // await vscode.workspace.fs.rename(file, d_path);
-
-            const eucalyptusRenamer = new EucalyptusRenamer(file);
-            await eucalyptusRenamer.initialize();
-            eucalyptusRenamer.execute();
-        })
-    );
+                const eucalyptusRenamer = new EucalyptusRenamer(file);
+                await eucalyptusRenamer.initialize();
+                eucalyptusRenamer.execute();
+            })
+        );
+    }
 
     context.subscriptions.push(disposable);
 }
