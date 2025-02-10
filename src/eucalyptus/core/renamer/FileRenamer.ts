@@ -55,13 +55,15 @@ export class FileRenamer {
     permissibleNames = [/\bindex\b/i];
 
     /**
-     * An array of files that are ready to be renamed.
+     * ! An array of files that are ready to be renamed.
      */
     files: Array<RenamableFile>;
     /**
      * An instance of FileContentRenamer used to update the content of files before renaming.
      */
     fileContentRenamer: FileContentRenamer;
+
+    filePathsForRenameContent: Array<vscode.Uri>;
 
     /**
      * Constructor for the FileRenamer class.
@@ -72,12 +74,12 @@ export class FileRenamer {
         this.pattern = this.createPermissibleNamePattern(replacement.from);
         this.permissibleNames.push(this.pattern);
 
-        this.files = this.analyzeFiles(candidateRenamableFiles);
+        const analyzedFiles = this.analyzeFiles(candidateRenamableFiles);
 
-        this.fileContentRenamer = new FileContentRenamer(
-            this.files.map((file) => file.location),
-            replacement
-        );
+        this.files = this.excludeFiles(analyzedFiles);
+        this.filePathsForRenameContent = analyzedFiles.map((file) => file.location);
+
+        this.fileContentRenamer = new FileContentRenamer(this.filePathsForRenameContent, replacement);
     }
 
     /**
@@ -144,6 +146,18 @@ export class FileRenamer {
         }
 
         return renamableFiles;
+    }
+
+    /**
+     * Excludes files named "index" from the file list.
+     * @param {RenamableFile[]} files - An array of file objects to filter.
+     * @returns {RenamableFile[]} - The filtered file array, where the files named "index" are (for example, index.js , index.ts) deleted.
+     * @private
+     */
+    private excludeFiles(files: RenamableFile[]): RenamableFile[] {
+        const excludeIndexFile = new RegExp(/^index\.\w+$/);
+
+        return files.filter((file) => excludeIndexFile.test(file.originalName));
     }
 
     /**
