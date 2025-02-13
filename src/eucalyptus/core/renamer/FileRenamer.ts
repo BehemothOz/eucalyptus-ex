@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 
-import { FileContentRenamer } from './FileContentRenamer';
 import { fm } from '../FileManager';
+import { FileContentRenamer } from './FileContentRenamer';
+import { type Replacement } from '../utils/replacement';
 
 /**
  * Represents a file that is a candidate for renaming.
@@ -31,14 +32,7 @@ interface RenamableFile extends CandidateRenamableFile {
      * New file location after renaming
      */
     newLocation: vscode.Uri;
-}
-
-/**
- * Represents a replacement operation, specifying what to replace and what to replace it with.
- */
-export interface Replacement {
-    from: string;
-    to: string;
+    isModified: boolean;
 }
 
 /**
@@ -90,13 +84,15 @@ export class FileRenamer {
         try {
             await this.fileContentRenamer.execute();
 
-            const renamingFileTasks = this.files.map((file) => {
-                return fm.rename(file.location, file.newLocation);
+            const renamingFileTasks = this.files.map(async (file) => {
+                await fm.rename(file.location, file.newLocation);
+                file.isModified = true;
             });
 
             await Promise.all(renamingFileTasks);
-        } catch {
+        } catch (error) {
             await this.fileContentRenamer.rollback();
+            await this.rollback();
         }
     }
 
@@ -121,6 +117,7 @@ export class FileRenamer {
         const renamableFile: RenamableFile = Object.assign(
             {
                 newLocation: location,
+                isModified: false,
             },
             file
         );
@@ -157,17 +154,19 @@ export class FileRenamer {
     private excludeFiles(files: RenamableFile[]): RenamableFile[] {
         const excludeIndexFile = new RegExp(/^index\.\w+$/);
 
-        return files.filter((file) => excludeIndexFile.test(file.originalName));
+        return files.filter((file) => !excludeIndexFile.test(file.originalName));
     }
 
     /**
      * Rolls back the renaming process.
-     * TODO: Add an implementation for rollback functionality.
      */
-    rollback() {
-        /*
-            TODO: add an implementation
-        */
+    async rollback() {
+        const modifiedFiles = this.files.filter((file) => file.isModified);
+        const renamingRollbackTasks = modifiedFiles.map((file) => {
+            return fm.rename(file.newLocation, file.location);
+        });
+
+        await Promise.all(renamingRollbackTasks);
     }
 }
 

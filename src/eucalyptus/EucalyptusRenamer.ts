@@ -2,10 +2,10 @@ import * as vscode from 'vscode';
 import * as path from 'node:path';
 
 import { showInputField } from './core/ui';
-import { FileRenamer, Replacement, type CandidateRenamableFile } from './core/renamer/FileRenamer';
+import { FileRenamer, type CandidateRenamableFile } from './core/renamer/FileRenamer';
 import { fm } from './core/FileManager';
 import { hasSpaces } from './Eucalyptus';
-import { createReplacement } from './core/utils/replacement';
+import { createReplacement, type Replacement } from './core/utils/replacement';
 
 /**
  * A class responsible for renaming a directory and its associated files.
