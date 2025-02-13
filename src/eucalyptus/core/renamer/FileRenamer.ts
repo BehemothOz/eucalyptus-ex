@@ -81,6 +81,10 @@ export class FileRenamer {
      * First, updates the content of the files, then renames the files themselves.
      */
     async execute() {
+        if (this.checkExistenceLocation()) {
+            throw new Error('A file already exists');
+        }
+
         try {
             await this.fileContentRenamer.execute();
 
@@ -94,6 +98,14 @@ export class FileRenamer {
             await this.fileContentRenamer.rollback();
             await this.rollback();
         }
+    }
+
+    /**
+     * Check correctness of new location before renaming
+     * @returns Returns true if at least one new path (location) already exists.
+     */
+    checkExistenceLocation(): boolean {
+        return this.files.some((file) => fm.exist(file.newLocation));
     }
 
     /**
