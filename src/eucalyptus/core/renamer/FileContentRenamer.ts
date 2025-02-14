@@ -90,7 +90,7 @@ export class FileContentRenamer extends FileStorage {
             }
         } catch (error) {
             await this.rollback();
-            throw new Error(`[FileContentRenamer] Execution failed`);
+            throw new Error(`[Renaming the contents of a file] Execution failed`);
         }
     }
 
