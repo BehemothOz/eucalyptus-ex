@@ -2,10 +2,11 @@ import * as vscode from 'vscode';
 import * as path from 'node:path';
 
 import { showInputField } from './core/ui';
-import { FileRenamer, Replacement, type CandidateRenamableFile } from './core/renamer/FileRenamer';
+import { FileRenamer, type CandidateRenamableFile } from './core/renamer/FileRenamer';
 import { fm } from './core/FileManager';
 import { hasSpaces } from './Eucalyptus';
-import { createReplacement } from './core/utils/replacement';
+import { createReplacement, type Replacement } from './core/utils/replacement';
+import { isCommandRenamerError } from './core/renamer/error';
 
 /**
  * A class responsible for renaming a directory and its associated files.
@@ -68,14 +69,20 @@ export class EucalyptusRenamer {
             throw new Error('');
         }
 
-        try {
-            const fileRenamer = new FileRenamer(this.candidateRenamableFiles, this.replacement);
+        const fileRenamer = new FileRenamer(this.candidateRenamableFiles, this.replacement);
 
+        try {
             await fileRenamer.execute();
             await this.renameDirectory();
         } catch (error) {
-            console.log(error);
-            vscode.window.showErrorMessage('unexpected error');
+            await fileRenamer.rollback();
+
+            if (isCommandRenamerError(error)) {
+                vscode.window.showErrorMessage(error.message);
+                return;
+            }
+
+            vscode.window.showErrorMessage('Unexpected Error');
         }
     }
 

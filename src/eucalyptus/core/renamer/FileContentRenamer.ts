@@ -2,6 +2,7 @@ import vscode from 'vscode';
 
 import { FileStorage } from './FileStorage';
 import { fm } from '../FileManager';
+import { CommandRenamerError } from './error';
 
 /**
  * A class to manage the process of reading, replacing, and writing file contents.
@@ -90,7 +91,7 @@ export class FileContentRenamer extends FileStorage {
             }
         } catch (error) {
             await this.rollback();
-            throw new Error(`[FileContentRenamer] Execution failed`);
+            throw new CommandRenamerError('Error when changing the file contents');
         }
     }
 
@@ -115,7 +116,7 @@ export class FileContentRenamer extends FileStorage {
         try {
             await Promise.all(tasks);
         } catch (rollbackErr) {
-            console.error(`Recovery error:`, rollbackErr);
+            throw new Error('Recovery error');
         }
     }
 

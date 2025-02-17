@@ -1,7 +1,9 @@
 import * as vscode from 'vscode';
 
-import { FileContentRenamer } from './FileContentRenamer';
 import { fm } from '../FileManager';
+import { FileContentRenamer } from './FileContentRenamer';
+import { CommandRenamerError, isCommandRenamerError } from './error';
+import { type Replacement } from '../utils/replacement';
 
 /**
  * Represents a file that is a candidate for renaming.
@@ -31,14 +33,7 @@ interface RenamableFile extends CandidateRenamableFile {
      * New file location after renaming
      */
     newLocation: vscode.Uri;
-}
-
-/**
- * Represents a replacement operation, specifying what to replace and what to replace it with.
- */
-export interface Replacement {
-    from: string;
-    to: string;
+    isModified: boolean;
 }
 
 /**
@@ -55,13 +50,15 @@ export class FileRenamer {
     permissibleNames = [/\bindex\b/i];
 
     /**
-     * An array of files that are ready to be renamed.
+     * ! An array of files that are ready to be renamed.
      */
     files: Array<RenamableFile>;
     /**
      * An instance of FileContentRenamer used to update the content of files before renaming.
      */
     fileContentRenamer: FileContentRenamer;
+
+    filePathsForRenameContent: Array<vscode.Uri>;
 
     /**
      * Constructor for the FileRenamer class.
@@ -72,12 +69,12 @@ export class FileRenamer {
         this.pattern = this.createPermissibleNamePattern(replacement.from);
         this.permissibleNames.push(this.pattern);
 
-        this.files = this.analyzeFiles(candidateRenamableFiles);
+        const analyzedFiles = this.analyzeFiles(candidateRenamableFiles);
 
-        this.fileContentRenamer = new FileContentRenamer(
-            this.files.map((file) => file.location),
-            replacement
-        );
+        this.files = this.excludeFiles(analyzedFiles);
+        this.filePathsForRenameContent = analyzedFiles.map((file) => file.location);
+
+        this.fileContentRenamer = new FileContentRenamer(this.filePathsForRenameContent, replacement);
     }
 
     /**
@@ -85,17 +82,36 @@ export class FileRenamer {
      * First, updates the content of the files, then renames the files themselves.
      */
     async execute() {
+        if (this.checkExistenceLocation()) {
+            throw new CommandRenamerError('A file already exists');
+        }
+
         try {
             await this.fileContentRenamer.execute();
 
-            const renamingFileTasks = this.files.map((file) => {
-                return fm.rename(file.location, file.newLocation);
+            const renamingFileTasks = this.files.map(async (file) => {
+                await fm.rename(file.location, file.newLocation);
+                file.isModified = true;
             });
 
             await Promise.all(renamingFileTasks);
-        } catch {
-            await this.fileContentRenamer.rollback();
+        } catch (error) {
+            await this.rollback();
+
+            if (isCommandRenamerError(error)) {
+                throw error;
+            }
+
+            throw new CommandRenamerError(`Error when changing the file name`);
         }
+    }
+
+    /**
+     * Check correctness of new location before renaming
+     * @returns Returns true if at least one new path (location) already exists.
+     */
+    checkExistenceLocation(): boolean {
+        return this.files.some((file) => fm.exist(file.newLocation));
     }
 
     /**
@@ -119,6 +135,7 @@ export class FileRenamer {
         const renamableFile: RenamableFile = Object.assign(
             {
                 newLocation: location,
+                isModified: false,
             },
             file
         );
@@ -147,13 +164,31 @@ export class FileRenamer {
     }
 
     /**
-     * Rolls back the renaming process.
-     * TODO: Add an implementation for rollback functionality.
+     * Excludes files named "index" from the file list.
+     * @param {RenamableFile[]} files - An array of file objects to filter.
+     * @returns {RenamableFile[]} - The filtered file array, where the files named "index" are (for example, index.js , index.ts) deleted.
+     * @private
      */
-    rollback() {
-        /*
-            TODO: add an implementation
-        */
+    private excludeFiles(files: RenamableFile[]): RenamableFile[] {
+        const excludeIndexFile = new RegExp(/^index\.\w+$/);
+
+        return files.filter((file) => !excludeIndexFile.test(file.originalName));
+    }
+
+    /**
+     * Rolls back the renaming process.
+     */
+    async rollback() {
+        const modifiedFiles = this.files.filter((file) => file.isModified);
+        const renamingRollbackTasks = modifiedFiles.map((file) => {
+            return fm.rename(file.newLocation, file.location);
+        });
+
+        try {
+            await Promise.all(renamingRollbackTasks);
+        } catch {
+            throw new Error('Recovery error');
+        }
     }
 }
 
