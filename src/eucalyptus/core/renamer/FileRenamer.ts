@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 
 import { fm } from '../FileManager';
 import { FileContentRenamer } from './FileContentRenamer';
+import { CommandRenamerError, isCommandRenamerError } from './error';
 import { type Replacement } from '../utils/replacement';
 
 /**
@@ -82,7 +83,7 @@ export class FileRenamer {
      */
     async execute() {
         if (this.checkExistenceLocation()) {
-            throw new Error('A file already exists');
+            throw new CommandRenamerError('A file already exists');
         }
 
         try {
@@ -95,8 +96,13 @@ export class FileRenamer {
 
             await Promise.all(renamingFileTasks);
         } catch (error) {
-            await this.fileContentRenamer.rollback();
             await this.rollback();
+
+            if (isCommandRenamerError(error)) {
+                throw error;
+            }
+
+            throw new CommandRenamerError(`Error when changing the file name`);
         }
     }
 
@@ -178,7 +184,11 @@ export class FileRenamer {
             return fm.rename(file.newLocation, file.location);
         });
 
-        await Promise.all(renamingRollbackTasks);
+        try {
+            await Promise.all(renamingRollbackTasks);
+        } catch {
+            throw new Error('Recovery error');
+        }
     }
 }
 
